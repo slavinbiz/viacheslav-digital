@@ -1,2 +1,3 @@
 https://slavinbiz.github.io
 https://slavinbiz.github.io/landing.html
+https://slavinbiz.github.io/project/ (AI-Agent Studio)
