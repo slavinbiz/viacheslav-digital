@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тарифы</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .pricing-card {
+            background-color: #252525;
+            border: 1px solid #333333;
+            border-radius: 12px;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff8c00;
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.2);
+        }
+
+        .pricing-card.featured {
+            border-color: #ff8c00;
+            background-color: #2a2a2a;
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.15);
+        }
+
+        .pricing-header {
+            margin-bottom: 30px;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 3rem;
+            color: #ff8c00;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .currency {
+            font-size: 1.2rem;
+            vertical-align: super;
+        }
+
+        .period {
+            color: #888888;
+            font-size: 0.95rem;
+        }
+
+        .features {
+            list-style: none;
+            margin: 30px 0;
+            flex-grow: 1;
+        }
+
+        .features li {
+            padding: 12px 0;
+            border-bottom: 1px solid #333333;
+            color: #d0d0d0;
+        }
+
+        .features li:last-child {
+            border-bottom: none;
+        }
+
+        .features li::before {
+            content: "✓ ";
+            color: #ff8c00;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .btn {
+            background-color: #333333;
+            color: #e0e0e0;
+            border: 2px solid #333333;
+            padding: 14px 28px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background-color: #444444;
+            border-color: #ff8c00;
+        }
+
+        .btn.primary {
+            background-color: #ff8c00;
+            color: #ffffff;
+            border-color: #ff8c00;
+        }
+
+        .btn.primary:hover {
+            background-color: #e67e00;
+            border-color: #e67e00;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #ff8c00;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #333333;
+            color: #888888;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .price {
+                font-size: 2.2rem;
+            }
+
+            .pricing-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Наши тарифы</h1>
+            <p class="subtitle">Выберите подходящий план и начните прямо сейчас</p>
+        </header>
+
+        <div class="pricing-grid">
+            <!-- Тариф 1: Базовый -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="plan-name">Базовый</div>
+                    <div class="price"><span class="currency">₽</span>499</div>
+                    <div class="period">в месяц</div>
+                </div>
+                <ul class="features">
+                    <li>До 5 проектов</li>
+                    <li>5 GB хранилища</li>
+                    <li>Базовая поддержка по имейлу</li>
+                    <li>Доступ к основным инструментам</li>
+                </ul>
+                <button class="btn">Выбрать</button>
+            </div>
+
+            <!-- Тариф 2: Профессиональный (выделенный) -->
+            <div class="pricing-card featured">
+                <div class="badge">Популярный выбор</div>
+                <div class="pricing-header">
+                    <div class="plan-name">Профессиональный</div>
+                    <div class="price"><span class="currency">₽</span>1 299</div>
+                    <div class="period">в месяц</div>
+                </div>
+                <ul class="features">
+                    <li>Неограниченные проекты</li>
+                    <li>100 GB хранилища</li>
+                    <li>Приоритетная поддержка 24/7</li>
+                    <li>Командная работа (до 5 человек)</li>
+                    <li>Расширенная аналитика</li>
+                </ul>
+                <button class="btn primary">Выбрать</button>
+            </div>
+
+            <!-- Тариф 3: Премиум -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="plan-name">Премиум</div>
+                    <div class="price"><span class="currency">₽</span>2 999</div>
+                    <div class="period">в месяц</div>
+                </div>
+                <ul class="features">
+                    <li>Всё из Профессионального</li>
+                    <li>Неограниченное хранилище</li>
+                    <li>Командная работа (до 50 человек)</li>
+                    <li>Интеграции и API доступ</li>
+                    <li>Личный менеджер аккаунта</li>
+                    <li>Кастомные решения</li>
+                </ul>
+                <button class="btn">Выбрать</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>Все тарифы включают 14 дней бесплатного тестирования. Никаких скрытых платежей. Отмена в любой момент.</p>
+        </footer>
+    </div>
+</body>
+</html>
