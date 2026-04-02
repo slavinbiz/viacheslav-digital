@@ -595,35 +595,60 @@
             };
 
             try {
-                let formspreeOk = true;
+                let formspreeOk = false;
+                const actionUrl = this.action && this.action.trim();
+                const isDefaultFormspree = !actionUrl || actionUrl.includes('yourFormID') || actionUrl.includes('formspree.io/f/yourFormID');
 
-                if (this.action.includes('yourFormID')) {
-                    console.warn('Formspree не настроен. Отправка данных только в Telegram.');
+                if (isDefaultFormspree) {
+                    console.warn('Formspree не настроен или используется placeholder, пропускаем отправку по email.');
                     statusEl.textContent = 'Formspree не настроен, отправка заявки только в Telegram.';
                 } else {
-                    const response = await fetch(this.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: { 'Accept': 'application/json' }
-                    });
-
-                    if (!response.ok) {
-                        formspreeOk = false;
-                        console.warn('Formspree недоступен, продолжаем отправку в Telegram.');
+                    try {
+                        const response = await fetch(actionUrl, {
+                            method: 'POST',
+                            body: formData,
+                            headers: { 'Accept': 'application/json' }
+                        });
+                        if (response.ok) {
+                            formspreeOk = true;
+                        } else {
+                            console.warn('Formspree вернул не OK:', response.status, response.statusText);
+                            statusEl.textContent = 'Formspree ответил ошибкой, продолжаем отправку в Telegram.';
+                        }
+                    } catch (formspreeError) {
+                        console.warn('Formspree недоступен, продолжаем отправку в Telegram:', formspreeError);
+                        statusEl.textContent = 'Formspree временно недоступен, продолжаем отправку в Telegram.';
                     }
                 }
 
                 const telegramText = `🆕 Новая заявка от ${name}\n📧 ${email}\n📞 ${phone}\n💬 ${message}`;
 
                 if (telegramConfig.botToken && telegramConfig.chatId && telegramConfig.botToken !== 'YOUR_TELEGRAM_BOT_TOKEN') {
-                    const tgResponse = await fetch(`https://api.telegram.org/bot${telegramConfig.botToken}/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ chat_id: telegramConfig.chatId, text: telegramText })
-                    });
+                    const telegramUrl = `https://api.telegram.org/bot${telegramConfig.botToken}/sendMessage?chat_id=${telegramConfig.chatId}&text=${encodeURIComponent(telegramText)}`;
+                    let tgSuccess = false;
 
-                    if (!tgResponse.ok) {
-                        throw new Error('Telegram API вернул ошибку.');
+                    // Попытка стандартного fetch (может быть блокировка CORS для прямого запроса)
+                    try {
+                        const tgResponse = await fetch(telegramUrl, { method: 'GET' });
+                        if (tgResponse.ok) {
+                            tgSuccess = true;
+                        }
+                    } catch (innerError) {
+                        console.warn('CORS или сеть при прямом запросе к Telegram, пробуем no-cors...', innerError);
+                    }
+
+                    // Фоллбэк: no-cors (fire-and-forget), не гарантируется результат, но может пройти через браузерные ограничения CORS
+                    if (!tgSuccess) {
+                        try {
+                            await fetch(telegramUrl, { method: 'GET', mode: 'no-cors' });
+                            tgSuccess = true;
+                        } catch (innerError) {
+                            console.warn('Не удалось отправить через no-cors', innerError);
+                        }
+                    }
+
+                    if (!tgSuccess) {
+                        throw new Error('Не удалось отправить запрос Telegram (CORS/no-cors).');
                     }
                 } else {
                     throw new Error('Telegram токен/chat_id не настроены.');
