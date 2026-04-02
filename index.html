@@ -506,7 +506,7 @@
     <section id="lead" class="container" style="padding: 40px 0;">
         <h2 class="section-title">Оставьте заявку</h2>
         <p class="section-subtitle">Расскажите о задаче, и мы подготовим предложение за 1 час.</p>
-        <form class="lead-form" id="leadForm" action="https://formspree.io/f/yourFormID" method="POST">
+        <form class="lead-form" id="leadForm" action="#" method="POST">
             <input type="hidden" name="_subject" value="Новая заявка AI-Agent Studio">
             <input type="hidden" name="_captcha" value="false">
 
@@ -609,11 +609,7 @@
                         }
                     } catch (innerError) {
                         console.warn('Ошибка Telegram API, пробуем no-cors (fire-and-forget):', innerError);
-                        try {
-                            await fetch(telegramUrl, { method: 'GET', mode: 'no-cors' });
-                        } catch (anotherError) {
-                            throw new Error('Не удалось отправить в Telegram (CORS/no-cors)');
-                        }
+                        await fetch(telegramUrl, { method: 'GET', mode: 'no-cors' });
                     }
                 } else {
                     throw new Error('Telegram токен/chat_id не настроены.');
@@ -621,9 +617,7 @@
 
                 this.reset();
                 statusEl.style.color = '#7ed321';
-                statusEl.textContent = formspreeOk
-                    ? 'Спасибо! Ваша заявка отправлена. Мы свяжемся в течение 30 минут.'
-                    : 'Заявка принята, но Formspree временно недоступен. Мы отправили в Telegram.';
+                statusEl.textContent = 'Спасибо! Ваша заявка отправлена. Мы свяжемся в течение 30 минут.';
             } catch (error) {
                 console.error(error);
                 statusEl.style.color = '#ff6b6b';
