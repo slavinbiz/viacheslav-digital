@@ -595,60 +595,25 @@
             };
 
             try {
-                let formspreeOk = false;
-                const actionUrl = this.action && this.action.trim();
-                const isDefaultFormspree = !actionUrl || actionUrl.includes('yourFormID') || actionUrl.includes('formspree.io/f/yourFormID');
-
-                if (isDefaultFormspree) {
-                    console.warn('Formspree не настроен или используется placeholder, пропускаем отправку по email.');
-                    statusEl.textContent = 'Formspree не настроен, отправка заявки только в Telegram.';
-                } else {
-                    try {
-                        const response = await fetch(actionUrl, {
-                            method: 'POST',
-                            body: formData,
-                            headers: { 'Accept': 'application/json' }
-                        });
-                        if (response.ok) {
-                            formspreeOk = true;
-                        } else {
-                            console.warn('Formspree вернул не OK:', response.status, response.statusText);
-                            statusEl.textContent = 'Formspree ответил ошибкой, продолжаем отправку в Telegram.';
-                        }
-                    } catch (formspreeError) {
-                        console.warn('Formspree недоступен, продолжаем отправку в Telegram:', formspreeError);
-                        statusEl.textContent = 'Formspree временно недоступен, продолжаем отправку в Telegram.';
-                    }
-                }
-
+                // убираем Formspree, так как сейчас используется шаблонный action и он возвращает 404
+                statusEl.textContent = 'Отправка заявки через Telegram...';
                 const telegramText = `🆕 Новая заявка от ${name}\n📧 ${email}\n📞 ${phone}\n💬 ${message}`;
 
                 if (telegramConfig.botToken && telegramConfig.chatId && telegramConfig.botToken !== 'YOUR_TELEGRAM_BOT_TOKEN') {
                     const telegramUrl = `https://api.telegram.org/bot${telegramConfig.botToken}/sendMessage?chat_id=${telegramConfig.chatId}&text=${encodeURIComponent(telegramText)}`;
-                    let tgSuccess = false;
 
-                    // Попытка стандартного fetch (может быть блокировка CORS для прямого запроса)
                     try {
                         const tgResponse = await fetch(telegramUrl, { method: 'GET' });
-                        if (tgResponse.ok) {
-                            tgSuccess = true;
+                        if (!tgResponse.ok) {
+                            throw new Error(`Telegram API: ${tgResponse.status} ${tgResponse.statusText}`);
                         }
                     } catch (innerError) {
-                        console.warn('CORS или сеть при прямом запросе к Telegram, пробуем no-cors...', innerError);
-                    }
-
-                    // Фоллбэк: no-cors (fire-and-forget), не гарантируется результат, но может пройти через браузерные ограничения CORS
-                    if (!tgSuccess) {
+                        console.warn('Ошибка Telegram API, пробуем no-cors (fire-and-forget):', innerError);
                         try {
                             await fetch(telegramUrl, { method: 'GET', mode: 'no-cors' });
-                            tgSuccess = true;
-                        } catch (innerError) {
-                            console.warn('Не удалось отправить через no-cors', innerError);
+                        } catch (anotherError) {
+                            throw new Error('Не удалось отправить в Telegram (CORS/no-cors)');
                         }
-                    }
-
-                    if (!tgSuccess) {
-                        throw new Error('Не удалось отправить запрос Telegram (CORS/no-cors).');
                     }
                 } else {
                     throw new Error('Telegram токен/chat_id не настроены.');
