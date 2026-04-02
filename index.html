@@ -595,33 +595,49 @@
             };
 
             try {
-                const response = await fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'Accept': 'application/json' }
-                });
+                let formspreeOk = true;
 
-                if (!response.ok) {
-                    throw new Error('Сервис Formspree недоступен');
+                if (this.action.includes('yourFormID')) {
+                    console.warn('Formspree не настроен. Отправка данных только в Telegram.');
+                    statusEl.textContent = 'Formspree не настроен, отправка заявки только в Telegram.';
+                } else {
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'Accept': 'application/json' }
+                    });
+
+                    if (!response.ok) {
+                        formspreeOk = false;
+                        console.warn('Formspree недоступен, продолжаем отправку в Telegram.');
+                    }
                 }
 
                 const telegramText = `🆕 Новая заявка от ${name}\n📧 ${email}\n📞 ${phone}\n💬 ${message}`;
 
                 if (telegramConfig.botToken && telegramConfig.chatId && telegramConfig.botToken !== 'YOUR_TELEGRAM_BOT_TOKEN') {
-                    await fetch(`https://api.telegram.org/bot${telegramConfig.botToken}/sendMessage`, {
+                    const tgResponse = await fetch(`https://api.telegram.org/bot${telegramConfig.botToken}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ chat_id: telegramConfig.chatId, text: telegramText })
                     });
+
+                    if (!tgResponse.ok) {
+                        throw new Error('Telegram API вернул ошибку.');
+                    }
+                } else {
+                    throw new Error('Telegram токен/chat_id не настроены.');
                 }
 
                 this.reset();
                 statusEl.style.color = '#7ed321';
-                statusEl.textContent = 'Спасибо! Ваша заявка отправлена. Мы свяжемся в течение 30 минут.';
+                statusEl.textContent = formspreeOk
+                    ? 'Спасибо! Ваша заявка отправлена. Мы свяжемся в течение 30 минут.'
+                    : 'Заявка принята, но Formspree временно недоступен. Мы отправили в Telegram.';
             } catch (error) {
                 console.error(error);
                 statusEl.style.color = '#ff6b6b';
-                statusEl.textContent = 'Временно не удалось отправить заявку на почту или Telegram. Заявка сохранена локально.';
+                statusEl.textContent = 'Ошибка отправки: ' + (error.message || error);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Отправить заявку';
