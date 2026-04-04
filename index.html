@@ -850,6 +850,7 @@
     .contact-or::before, .contact-or::after {
       content: ''; flex: 1; height: 1px; background: var(--border);
     }
+    .contact-links { display: flex; flex-direction: column; gap: 12px; }
     .contact-tg {
       display: flex; align-items: center; gap: 14px;
       background: rgba(255,255,255,0.03);
@@ -1511,15 +1512,36 @@
         <button class="btn-reset" id="form-reset">Отправить ещё одну</button>
       </div>
       <div class="contact-or">или напишите напрямую</div>
-      <a href="https://t.me/Viacheslav_Demin" target="_blank" class="contact-tg">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/>
-        </svg>
-        <div class="contact-tg-text">
-          <strong>@Viacheslav_Demin</strong>
-          <span>Напишите — отвечу в течение 2 часов</span>
-        </div>
-      </a>
+      <div class="contact-links">
+        <a href="https://t.me/Viacheslav_Demin" target="_blank" class="contact-tg">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/>
+          </svg>
+          <div class="contact-tg-text">
+            <strong>@Viacheslav_Demin</strong>
+            <span>Telegram — предпочтительный способ</span>
+          </div>
+        </a>
+        <a href="tel:+79064252045" class="contact-tg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.07 13 19.79 19.79 0 0 1 1 4.18 2 2 0 0 1 2.96 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.92z"/>
+          </svg>
+          <div class="contact-tg-text">
+            <strong>+7 (906) 425-20-45</strong>
+            <span>Звонок или WhatsApp</span>
+          </div>
+        </a>
+        <a href="mailto:slavin68@mail.ru" class="contact-tg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          <div class="contact-tg-text">
+            <strong>slavin68@mail.ru</strong>
+            <span>Пишите на почту</span>
+          </div>
+        </a>
+      </div>
       <p class="contact-hint">После заявки я напишу вам, уточню детали и предложу решение. Без давления и навязчивых звонков.</p>
     </div>
   </div>
