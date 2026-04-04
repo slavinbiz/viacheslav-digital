@@ -100,10 +100,22 @@
       background: var(--accent);
       color: #fff;
       box-shadow: 0 4px 24px rgba(255,140,0,0.3);
+      position: relative;
+      overflow: hidden;
     }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+      transform: skewX(-18deg);
+      transition: left 0.55s ease;
+    }
+    .btn-primary:hover::after { left: 160%; }
     .btn-primary:hover {
       background: var(--accent-hover);
-      box-shadow: 0 8px 32px rgba(255,140,0,0.45);
+      box-shadow: 0 8px 32px rgba(255,140,0,0.5);
     }
     .btn-secondary {
       background: transparent;
@@ -118,15 +130,20 @@
     /* ── REVEAL ──────────────────────────────────────────── */
     .reveal {
       opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
     }
     .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    .reveal-left  { opacity: 0; transform: translateX(-36px); transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .reveal-right { opacity: 0; transform: translateX(36px);  transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .reveal-left.visible, .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+    .reveal-delay-5 { transition-delay: 0.42s; }
 
     /* ── NAVIGATION ──────────────────────────────────────── */
     nav {
@@ -280,7 +297,19 @@
     }
 
     .hero h1 { margin-bottom: 22px; }
-    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #ff8c00 0%, #ffcc70 45%, #ff6b00 75%, #ff8c00 100%);
+      background-size: 250% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmerText 4s linear infinite;
+    }
+    @keyframes shimmerText {
+      0%   { background-position: 0% center; }
+      100% { background-position: 250% center; }
+    }
 
     .hero-typing-wrap {
       font-family: var(--mono);
@@ -369,7 +398,7 @@
       padding: 32px 28px;
       transition: border-color var(--transition), transform var(--transition);
     }
-    .pain-card:hover { border-color: rgba(255,140,0,0.3); transform: translateY(-4px); }
+    .pain-card:hover { border-color: rgba(255,140,0,0.35); transform: translateY(-6px); box-shadow: 0 20px 44px rgba(0,0,0,0.35); }
     .pain-icon {
       font-size: 2rem;
       margin-bottom: 18px;
@@ -413,9 +442,9 @@
       transition: opacity var(--transition);
     }
     .service-card:hover {
-      border-color: rgba(255,140,0,0.35);
-      transform: translateY(-5px);
-      box-shadow: 0 20px 48px rgba(0,0,0,0.35);
+      border-color: rgba(255,140,0,0.4);
+      transform: translateY(-7px);
+      box-shadow: 0 24px 56px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,140,0,0.12);
     }
     .service-card:hover::before { opacity: 1; }
     .service-icon { font-size: 2.2rem; margin-bottom: 18px; display: block; position: relative; }
@@ -501,9 +530,9 @@
       transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
     }
     .portfolio-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 24px 56px rgba(0,0,0,0.45);
-      border-color: rgba(255,140,0,0.25);
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 28px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,140,0,0.15);
+      border-color: rgba(255,140,0,0.3);
     }
     .portfolio-thumb {
       aspect-ratio: 16/9;
@@ -1424,12 +1453,21 @@
   // ── SCROLL PROGRESS BAR ────────────────────────────────
   const progressBar = document.getElementById('progress-bar');
 
-  // ── NAV SCROLL EFFECT ──────────────────────────────────
-  const navbar = document.getElementById('navbar');
+  // ── NAV + PROGRESS + PARALLAX ─────────────────────────
+  const navbar    = document.getElementById('navbar');
+  const heroAurora = document.querySelector('.hero-aurora');
+  const heroSection = document.getElementById('hero');
+
   window.addEventListener('scroll', () => {
-    const h = document.documentElement;
+    const h   = document.documentElement;
+    const sy  = window.scrollY;
     progressBar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
-    navbar.classList.toggle('scrolled', window.scrollY > 40);
+    navbar.classList.toggle('scrolled', sy > 40);
+
+    // Параллакс: aurora движется в 0.35× от скорости скролла
+    if (heroAurora && sy < (heroSection ? heroSection.offsetHeight : 900)) {
+      heroAurora.style.transform = `translateY(${sy * 0.35}px)`;
+    }
   }, { passive: true });
 
   // ── HAMBURGER MENU ─────────────────────────────────────
@@ -1462,21 +1500,10 @@
   })();
 
   // ── INTERSECTION OBSERVER (REVEAL) ────────────────────
-  new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        e.target._obs && e.target._obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.1 }).observe
-    // ↑ can't chain observe — use forEach below
-  ;
-
   const revealObs = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
   }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObs.observe(el));
 
   // ── COUNTER ANIMATION ─────────────────────────────────
   let countersStarted = false;
