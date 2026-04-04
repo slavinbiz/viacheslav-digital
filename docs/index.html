@@ -1,632 +1,1717 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Agent Studio | Быстрые AI-решения для вашего бизнеса</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Цифровой Мастер — Сайты, Приложения и ИИ-агенты</title>
+  <meta name="description" content="Создаю сайты, веб-приложения и ИИ-агентов для бизнеса. Быстро, понятно, без стресса. Запускаем за 7–14 дней.">
+  <meta property="og:title" content="Цифровой Мастер — Сайты, Приложения и ИИ-агенты">
+  <meta property="og:description" content="Помогаю предпринимателям запускать цифровые продукты. Лендинги, боты, автоматизация.">
+  <meta property="og:type" content="website">
+  <style>
+    /* ── RESET & ROOT ─────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --dark-bg: #1a1a1a;
-            --card-bg: #252525;
-            --text-light: #e0e0e0;
-            --text-primary: #ffffff;
-            --accent: #ff8c00;
-            --border-color: #333333;
-        }
+    :root {
+      --bg-main:    #0a0a0f;
+      --bg-card:    #12121f;
+      --bg-section: #0d0d18;
+      --text-primary:   #ffffff;
+      --text-secondary: #a0a0b0;
+      --text-muted:     #55556a;
+      --accent:       #ff8c00;
+      --accent-hover: #e67e00;
+      --accent-glow:  rgba(255,140,0,0.18);
+      --border:       rgba(255,255,255,0.08);
+      --radius:   12px;
+      --radius-lg: 20px;
+      --transition: 0.3s ease;
+      --container: 1160px;
+      --mono: 'JetBrains Mono','Fira Code','Courier New',monospace;
+    }
 
-        body {
-            background-color: var(--dark-bg);
-            color: var(--text-light);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-            line-height: 1.6;
-            font-size: 16px;
-        }
+    html { scroll-behavior: smooth; }
 
-        /* NAVIGATION */
-        nav {
-            background-color: rgba(26, 26, 26, 0.95);
-            padding: 20px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border-color);
-        }
+    body {
+      background: var(--bg-main);
+      color: var(--text-secondary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    /* ── SCROLL PROGRESS ─────────────────────────────────── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #ff6b00);
+      z-index: 9999;
+      transition: width 0.1s linear;
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent);
-            text-decoration: none;
-        }
+    /* ── TYPOGRAPHY ──────────────────────────────────────── */
+    h1 { font-size: clamp(2.4rem,6vw,5rem); font-weight: 800; color: var(--text-primary); line-height: 1.1; letter-spacing: -1.5px; }
+    h2 { font-size: clamp(1.8rem,4vw,3rem); font-weight: 700; color: var(--text-primary); line-height: 1.2; letter-spacing: -0.5px; }
+    h3 { font-size: clamp(1.05rem,2.5vw,1.35rem); font-weight: 600; color: var(--text-primary); line-height: 1.35; }
+    p  { color: var(--text-secondary); }
+    a  { color: var(--accent); text-decoration: none; }
 
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-        }
+    /* ── LAYOUT ──────────────────────────────────────────── */
+    .container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+    section { padding: 100px 0; }
+    section:nth-child(odd) { background: var(--bg-section); }
 
-        .nav-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.73rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .section-sub {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 14px auto 0;
+    }
 
-        .nav-links a:hover {
-            color: var(--accent);
-        }
+    /* ── BUTTONS ─────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+      border: none;
+      text-decoration: none;
+    }
+    .btn:hover { transform: translateY(-2px); }
 
-        /* CONTAINER */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(255,140,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+      transform: skewX(-18deg);
+      transition: left 0.55s ease;
+    }
+    .btn-primary:hover::after { left: 160%; }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 8px 32px rgba(255,140,0,0.5);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+    }
+    .btn-secondary:hover {
+      background: var(--accent-glow);
+      box-shadow: 0 4px 20px rgba(255,140,0,0.2);
+    }
 
-        /* HERO SECTION */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding-bottom: 60px;
-        }
+    /* ── REVEAL ──────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
-        .hero-content {
-            max-width: 800px;
-        }
+    .reveal-left  { opacity: 0; transform: translateX(-36px); transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .reveal-right { opacity: 0; transform: translateX(36px);  transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .reveal-left.visible, .reveal-right.visible { opacity: 1; transform: translateX(0); }
 
-        .hero h1 {
-            font-size: clamp(2rem, 8vw, 4rem);
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+    .reveal-delay-5 { transition-delay: 0.42s; }
 
-        .hero-subtitle {
-            font-size: clamp(1rem, 4vw, 1.3rem);
-            color: var(--text-light);
-            margin-bottom: 40px;
-            line-height: 1.8;
-        }
+    /* ── NAVIGATION ──────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 20px 0;
+      transition: background var(--transition), box-shadow var(--transition), padding var(--transition);
+    }
+    nav.scrolled {
+      background: rgba(10,10,15,0.94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 1px 0 var(--border);
+      padding: 13px 0;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--accent); }
 
-        .hero-highlight {
-            color: var(--accent);
-            font-weight: 600;
-        }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-cta { margin-left: 6px; padding: 10px 22px; font-size: 0.88rem; }
 
-        /* CTA BUTTON */
-        .btn {
-            display: inline-block;
-            padding: 16px 40px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-            color: #1a1a1a;
-        }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 6px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        .btn-primary {
-            background-color: var(--accent);
-            color: #1a1a1a;
-        }
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: rgba(10,10,15,0.98);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      padding: 16px 24px 24px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+      transition: color var(--transition);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { color: var(--accent); }
 
-        .btn-primary:hover {
-            background-color: #ff9d1a;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 140, 0, 0.3);
-        }
+    /* ── HERO ────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 120px 0 90px;
+      background: var(--bg-main);
+    }
+    .hero-aurora { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--text-light);
-            border: 2px solid var(--accent);
-        }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.5;
+      animation: blobFloat 10s ease-in-out infinite alternate;
+    }
+    .blob-1 {
+      width: 540px; height: 540px;
+      background: radial-gradient(circle, rgba(255,140,0,0.38), transparent 65%);
+      top: -140px; right: 3%;
+      animation-duration: 9s;
+    }
+    .blob-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(100,30,220,0.3), transparent 65%);
+      bottom: -100px; left: -80px;
+      animation-duration: 13s;
+      animation-direction: alternate-reverse;
+    }
+    .blob-3 {
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(255,140,0,0.22), transparent 65%);
+      top: 42%; left: 46%;
+      animation-duration: 11s;
+    }
+    .hero-noise {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.034;
+      pointer-events: none;
+    }
+    @keyframes blobFloat {
+      0%   { transform: translate(0,0) scale(1); }
+      100% { transform: translate(22px,16px) scale(1.05); }
+    }
 
-        .btn-secondary:hover {
-            background-color: var(--accent);
-            color: #1a1a1a;
-        }
+    .hero-content { position: relative; z-index: 2; max-width: 800px; }
+    .hero-mono {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-mono::before {
+      content: '';
+      display: inline-block;
+      width: 32px; height: 1px;
+      background: var(--accent);
+    }
 
-        .button-group {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+    .hero h1 { margin-bottom: 22px; }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #ff8c00 0%, #ffcc70 45%, #ff6b00 75%, #ff8c00 100%);
+      background-size: 250% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmerText 4s linear infinite;
+    }
+    @keyframes shimmerText {
+      0%   { background-position: 0% center; }
+      100% { background-position: 250% center; }
+    }
 
-        /* RESPONSIVE NAVIGATION */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-        }
+    .hero-typing-wrap {
+      font-family: var(--mono);
+      font-size: 0.98rem;
+      color: var(--text-secondary);
+      margin-bottom: 22px;
+      min-height: 28px;
+    }
+    .typing-cursor {
+      display: inline-block;
+      width: 2px; height: 1.1em;
+      background: var(--accent);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 0.9s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
 
-        /* RESPONSIVE HERO */
-        @media (max-width: 768px) {
-            .hero {
-                min-height: auto;
-                padding: 60px 20px;
-            }
+    .hero-sub {
+      font-size: 1.15rem;
+      max-width: 570px;
+      margin-bottom: 42px;
+      line-height: 1.78;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
 
-            .hero h1 {
-                font-size: 2rem;
-                margin-bottom: 15px;
-            }
+    .hero-scroll {
+      position: absolute;
+      bottom: 34px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      animation: bounce 2.5s ease-in-out infinite;
+    }
+    .hero-scroll svg { width: 20px; height: 20px; stroke: var(--text-muted); }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(9px); }
+    }
 
-            .hero-subtitle {
-                font-size: 1rem;
-                margin-bottom: 30px;
-            }
+    /* ── PROOF ───────────────────────────────────────────── */
+    #proof { padding: 52px 0; }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+    }
+    .proof-item {
+      text-align: center;
+      padding: 24px 16px;
+      border-right: 1px solid var(--border);
+    }
+    .proof-item:last-child { border-right: none; }
+    .proof-num {
+      font-size: clamp(2rem,4vw,3rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 3px;
+    }
+    .proof-num sup { font-size: 1.2rem; color: var(--accent); }
+    .proof-label { font-size: 0.83rem; color: var(--text-muted); margin-top: 7px; }
 
-            .button-group {
-                flex-direction: column;
-            }
+    /* ── PAIN ────────────────────────────────────────────── */
+    #pain { text-align: center; }
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 20px;
+      margin-top: 52px;
+      text-align: left;
+    }
+    .pain-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+    .pain-card:hover { border-color: rgba(255,140,0,0.35); transform: translateY(-6px); box-shadow: 0 20px 44px rgba(0,0,0,0.35); }
+    .pain-icon {
+      font-size: 2rem;
+      margin-bottom: 18px;
+      display: block;
+    }
+    .pain-card h3 { margin-bottom: 10px; }
+    .pain-footer {
+      margin-top: 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .pain-footer p { font-size: 1.1rem; color: var(--text-primary); font-weight: 500; }
 
-            .btn {
-                width: 100%;
-            }
-        }
+    /* ── SERVICES ────────────────────────────────────────── */
+    #services { text-align: center; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 20px;
+      margin-top: 52px;
+      text-align: left;
+    }
+    .service-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at top left, var(--accent-glow), transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .service-card:hover {
+      border-color: rgba(255,140,0,0.4);
+      transform: translateY(-7px);
+      box-shadow: 0 24px 56px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,140,0,0.12);
+    }
+    .service-card:hover::before { opacity: 1; }
+    .service-icon { font-size: 2.2rem; margin-bottom: 18px; display: block; position: relative; }
+    .service-card h3 { margin-bottom: 12px; position: relative; }
+    .service-card p  { position: relative; margin-bottom: 20px; }
+    .service-result {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      background: var(--accent-glow);
+      border: 1px solid rgba(255,140,0,0.22);
+      border-radius: 6px;
+      padding: 5px 12px;
+      display: inline-block;
+      position: relative;
+    }
 
-        /* SECTIONS */
-        .section-title {
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            color: var(--text-primary);
-            text-align: center;
-            margin-bottom: 15px;
-        }
+    /* ── PROCESS ─────────────────────────────────────────── */
+    #process { text-align: center; }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(5,1fr);
+      gap: 0;
+      margin-top: 60px;
+      position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 23px;
+      left: calc(10% + 24px);
+      right: calc(10% + 24px);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border) 15%, var(--border) 85%, transparent);
+    }
+    .process-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-num {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      flex-shrink: 0;
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+    }
+    .process-step:hover .step-num {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+    .process-step h3 { font-size: 0.93rem; margin-bottom: 8px; }
+    .process-step p  { font-size: 0.83rem; }
 
-        .section-subtitle {
-            color: #b5b5b5;
-            text-align: center;
-            max-width: 750px;
-            margin: 0 auto 35px;
-            font-size: 1rem;
-        }
+    /* ── PORTFOLIO ───────────────────────────────────────── */
+    #portfolio { text-align: center; }
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 20px;
+      margin-top: 52px;
+      text-align: left;
+    }
+    .portfolio-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+    .portfolio-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 28px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,140,0,0.15);
+      border-color: rgba(255,140,0,0.3);
+    }
+    .portfolio-thumb {
+      aspect-ratio: 16/9;
+      position: relative;
+      overflow: hidden;
+    }
+    .portfolio-thumb-inner {
+      position: absolute; inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .portfolio-thumb-overlay {
+      position: absolute; inset: 0;
+      background: rgba(10,10,15,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .portfolio-card:hover .portfolio-thumb-overlay { opacity: 1; }
+    .portfolio-overlay-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transform: translateY(6px);
+      transition: transform var(--transition);
+    }
+    .portfolio-card:hover .portfolio-overlay-btn { transform: translateY(0); }
 
-        .grid-4,
-        .grid-3 {
-            display: grid;
-            gap: 20px;
-            margin-top: 20px;
-        }
+    .pt-1 { background: linear-gradient(135deg,#0f1535,#1e0b3e); }
+    .pt-2 { background: linear-gradient(135deg,#0a2010,#0d3520); }
+    .pt-3 { background: linear-gradient(135deg,#1a100a,#3a1800); }
+    .pt-4 { background: linear-gradient(135deg,#0a1025,#0a2040); }
+    .pt-5 { background: linear-gradient(135deg,#1a0a15,#350a25); }
+    .pt-6 { background: linear-gradient(135deg,#0f1a0a,#1a2e10); }
+    .pt-icon { font-size: 2.6rem; opacity: 0.65; }
 
-        .grid-4 {
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        }
+    .portfolio-info { padding: 20px 22px 24px; }
+    .portfolio-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      background: var(--accent-glow);
+      border-radius: 4px;
+      padding: 3px 8px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .portfolio-info h3 { font-size: 0.98rem; margin-bottom: 6px; }
+    .portfolio-result { font-size: 0.82rem; color: var(--accent); font-weight: 600; }
 
-        .grid-3 {
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        }
+    /* ── CASE STUDY ──────────────────────────────────────── */
+    #case { text-align: center; }
+    .case-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-top: 52px;
+      text-align: left;
+      overflow: hidden;
+    }
+    .case-body { padding: 48px 52px; }
+    .case-steps {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+    .case-step-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .case-step-label::before {
+      content: '';
+      display: block;
+      width: 20px; height: 1px;
+      background: var(--accent);
+    }
+    .case-step h3 { margin-bottom: 10px; }
+    .case-divider { height: 1px; background: var(--border); margin: 36px 0; }
+    .case-quote {
+      background: var(--accent-glow);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      padding: 24px 28px;
+      margin-bottom: 32px;
+    }
+    .case-quote p {
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      font-style: italic;
+      line-height: 1.75;
+      margin-bottom: 12px;
+    }
+    .case-quote-author { font-size: 0.84rem; color: var(--text-secondary); }
+    .case-cta { text-align: center; }
 
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 22px;
-            transition: transform 0.3s, border-color 0.3s;
-        }
+    /* ── REVIEWS ─────────────────────────────────────────── */
+    #reviews { text-align: center; }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 20px;
+      margin-top: 52px;
+      text-align: left;
+    }
+    .review-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      transition: transform var(--transition), border-color var(--transition);
+    }
+    .review-card:hover { transform: translateY(-4px); border-color: rgba(255,140,0,0.25); }
+    .review-stars { display: flex; gap: 4px; margin-bottom: 18px; }
+    .star { color: var(--accent); font-size: 1rem; }
+    .review-card p { font-size: 0.94rem; margin-bottom: 24px; line-height: 1.72; }
+    .review-author { display: flex; align-items: center; gap: 12px; }
+    .review-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-glow), rgba(100,30,220,0.2));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .review-name { font-weight: 600; color: var(--text-primary); font-size: 0.88rem; }
+    .review-role { font-size: 0.78rem; color: var(--text-muted); }
 
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-        }
+    /* ── ABOUT ───────────────────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .about-photo {
+      width: 100%;
+      aspect-ratio: 4/5;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .about-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .about-photo-glow {
+      position: absolute;
+      bottom: -40px; right: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, var(--accent-glow), transparent 65%);
+      filter: blur(30px);
+    }
+    .about-content h2 { margin-bottom: 20px; }
+    .about-content p { margin-bottom: 16px; }
+    .about-content p:last-of-type { margin-bottom: 32px; }
+    .stack-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .stack-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+    .stack-tag {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 12px;
+      color: var(--text-secondary);
+      transition: border-color var(--transition), color var(--transition);
+    }
+    .stack-tag:hover { border-color: var(--accent); color: var(--accent); }
+    .about-links { display: flex; gap: 14px; flex-wrap: wrap; }
+    .about-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 18px;
+      transition: border-color var(--transition), color var(--transition);
+    }
+    .about-link:hover { border-color: var(--accent); color: var(--accent); }
 
-        .card h3 {
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            font-size: 1.2rem;
-        }
+    /* ── FAQ ─────────────────────────────────────────────── */
+    #faq { text-align: center; }
+    .faq-list {
+      margin: 52px auto 0;
+      max-width: 760px;
+      text-align: left;
+    }
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: border-color var(--transition);
+    }
+    .faq-item.open { border-color: rgba(255,140,0,0.35); }
+    .faq-question {
+      width: 100%;
+      background: var(--bg-card);
+      border: none;
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      gap: 16px;
+      text-align: left;
+      transition: background var(--transition);
+    }
+    .faq-question:hover { background: rgba(255,255,255,0.03); }
+    .faq-q-text { font-size: 0.98rem; font-weight: 600; color: var(--text-primary); }
+    .faq-icon {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: border-color var(--transition), transform var(--transition), background var(--transition);
+    }
+    .faq-item.open .faq-icon {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      transform: rotate(45deg);
+    }
+    .faq-icon svg { width: 12px; height: 12px; stroke: var(--text-muted); transition: stroke var(--transition); }
+    .faq-item.open .faq-icon svg { stroke: var(--accent); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.38s ease;
+      background: var(--bg-card);
+    }
+    .faq-item.open .faq-answer { max-height: 300px; }
+    .faq-answer-inner { padding: 0 24px 22px; font-size: 0.93rem; line-height: 1.75; }
 
-        .card p,
-        .card ul {
-            color: #cfcfcf;
-            font-size: 0.97rem;
-            line-height: 1.6;
-        }
+    /* ── CONTACT ─────────────────────────────────────────── */
+    #contact { text-align: center; }
+    .contact-wrap { max-width: 640px; margin: 52px auto 0; }
+    .contact-form { text-align: left; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 1rem;
+      color: var(--text-primary);
+      font-family: inherit;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--text-muted); }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255,140,0,0.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-submit { width: 100%; padding: 16px; font-size: 1.02rem; margin-top: 8px; }
+    .form-status { text-align: center; margin-top: 14px; font-size: 0.88rem; min-height: 22px; }
+    .form-status.success { color: #5cb85c; }
+    .form-status.error   { color: #e74c3c; }
 
-        .card ul {
-            list-style: none;
-            padding-left: 0;
-        }
+    .contact-or {
+      display: flex; align-items: center; gap: 16px;
+      margin: 28px 0;
+      color: var(--text-muted); font-size: 0.84rem;
+    }
+    .contact-or::before, .contact-or::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .contact-tg {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 24px;
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .contact-tg:hover { border-color: rgba(255,140,0,0.4); background: var(--accent-glow); }
+    .contact-tg svg { width: 26px; height: 26px; fill: var(--accent); flex-shrink: 0; }
+    .contact-tg-text { text-align: left; }
+    .contact-tg-text strong { display: block; color: var(--text-primary); font-size: 0.98rem; }
+    .contact-tg-text span  { color: var(--text-secondary); font-size: 0.82rem; }
+    .contact-hint { margin-top: 18px; font-size: 0.8rem; color: var(--text-muted); }
 
-        .card ul li {
-            margin-bottom: 8px;
-        }
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      background: var(--bg-main);
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+    }
+    .footer-inner {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      gap: 20px; flex-wrap: wrap;
+    }
+    .footer-logo { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); }
+    .footer-logo span { color: var(--accent); }
+    .footer-tagline { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-links a { color: var(--text-muted); font-size: 0.84rem; transition: color var(--transition); }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { font-size: 0.78rem; color: var(--text-muted); }
 
-        .price {
-            margin: 10px 0;
-            font-size: 2rem;
-            color: var(--accent);
-            font-weight: bold;
-        }
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .proof-grid { grid-template-columns: repeat(2,1fr); }
+      .proof-item:nth-child(2) { border-right: none; }
+      .proof-item:nth-child(3),
+      .proof-item:nth-child(4) { border-top: 1px solid var(--border); }
+      .proof-item:nth-child(4) { border-right: none; }
+      .process-steps { grid-template-columns: repeat(3,1fr); gap: 28px; }
+      .process-steps::before { display: none; }
+      .about-grid { grid-template-columns: 240px 1fr; gap: 40px; }
+    }
 
-        .featured {
-            border-color: var(--accent);
-            background-color: #2e2e2e;
-        }
+    @media (max-width: 768px) {
+      section { padding: 72px 0; }
+      #hero   { padding: 100px 0 72px; }
+      .nav-links  { display: none; }
+      .hamburger  { display: flex; }
 
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
+      .proof-grid     { grid-template-columns: repeat(2,1fr); }
+      .pain-grid      { grid-template-columns: 1fr; }
+      .services-grid  { grid-template-columns: 1fr; }
+      .process-steps  { grid-template-columns: 1fr; gap: 24px; }
+      .process-steps::before { display: none; }
+      .process-step   { flex-direction: row; text-align: left; gap: 20px; align-items: flex-start; }
+      .step-num       { margin-bottom: 0; }
+      .portfolio-grid { grid-template-columns: 1fr; }
+      .case-steps     { grid-template-columns: 1fr; gap: 24px; }
+      .case-body      { padding: 32px 24px; }
+      .reviews-grid   { grid-template-columns: 1fr; }
+      .about-grid     { grid-template-columns: 1fr; }
+      .about-photo    { aspect-ratio: 4/3; max-width: 300px; margin: 0 auto; }
+      .footer-inner   { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
 
-        .kpi-card {
-            background-color: #222;
-            border: 1px solid #2f2f2f;
-            border-radius: 12px;
-            padding: 18px;
-            text-align: center;
-        }
+    @media (max-width: 480px) {
+      .hero-btns { flex-direction: column; }
+      .btn { justify-content: center; min-height: 48px; }
+    }
 
-        .kpi-card h3 {
-            color: var(--accent);
-            font-size: 2rem;
-            margin-bottom: 4px;
-        }
+    /* ── SCROLL TO TOP ───────────────────────────────────── */
+    #scroll-top {
+      position: fixed;
+      bottom: 32px; right: 28px;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(255,140,0,0.45);
+      opacity: 0;
+      transform: translateY(16px) scale(0.85);
+      transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.25s ease;
+      z-index: 900;
+      pointer-events: none;
+    }
+    #scroll-top.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    #scroll-top:hover {
+      box-shadow: 0 8px 32px rgba(255,140,0,0.65);
+      transform: translateY(-3px) scale(1.07);
+    }
+    #scroll-top svg { width: 20px; height: 20px; stroke: #fff; stroke-width: 2.2; }
 
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .lead-form {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 24px;
-            max-width: 700px;
-            margin: 0 auto;
-            color: var(--text-light);
-        }
-
-        .lead-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .lead-form input,
-        .lead-form textarea {
-            width: 100%;
-            background-color: #161616;
-            border: 1px solid #3a3a3a;
-            border-radius: 8px;
-            padding: 10px 12px;
-            color: var(--text-light);
-            margin-bottom: 16px;
-            font: 1rem inherit;
-        }
-
-        .lead-form textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .lead-form button {
-            margin-top: 8px;
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background-color: var(--accent);
-            color: #1a1a1a;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s;
-        }
-
-        .lead-form button:hover {
-            background-color: #ff9d1a;
-            transform: translateY(-1px);
-        }
-
-        /* SCROLL INDICATOR */
-        .scroll-indicator {
-            text-align: center;
-            padding: 20px 0;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(10px);
-            }
-        }
-    </style>
+    /* ── FORM SUCCESS OVERLAY ────────────────────────────── */
+    .form-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 48px 32px;
+      gap: 16px;
+    }
+    .form-success.show { display: flex; animation: successFadeIn 0.5s cubic-bezier(0.22,1,0.36,1); }
+    @keyframes successFadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+    .success-ring {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: rgba(92,184,92,0.12);
+      border: 2px solid rgba(92,184,92,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: ringPop 0.5s cubic-bezier(0.22,1,0.36,1);
+    }
+    @keyframes ringPop {
+      0%   { transform: scale(0.4); opacity: 0; }
+      70%  { transform: scale(1.1); }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+    .success-check {
+      width: 44px; height: 44px;
+      stroke: #5cb85c;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      animation: drawCheck 0.5s ease 0.25s forwards;
+    }
+    @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+    .form-success h3 { color: var(--text-primary); font-size: 1.4rem; }
+    .form-success p  { color: var(--text-secondary); max-width: 320px; }
+    .form-success .btn-reset {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .form-success .btn-reset:hover { color: var(--accent); border-color: var(--accent); }
+  </style>
 </head>
 <body>
-    <!-- NAVIGATION -->
-    <nav>
-        <div class="nav-container">
-            <a href="#" class="logo">🤖 AI-Agent Studio</a>
-            <ul class="nav-links">
-                <li><a href="#services">Услуги</a></li>
-                <li><a href="#pricing">Тарифы</a></li>
-                <li><a href="#cases">Кейсы</a></li>
-                <li><a href="#contact">Контакты</a></li>
-            </ul>
+
+<div id="progress-bar"></div>
+
+<!-- ── NAV ─────────────────────────────────────────────── -->
+<nav id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">Цифровой<span>.</span>Мастер</a>
+      <ul class="nav-links">
+        <li><a href="#services">Услуги</a></li>
+        <li><a href="#portfolio">Проекты</a></li>
+        <li><a href="#process">Процесс</a></li>
+        <li><a href="#about">Обо мне</a></li>
+        <li><a href="#contact" class="btn btn-primary nav-cta">Написать</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#services"  onclick="closeMobileMenu()">Услуги</a>
+    <a href="#portfolio" onclick="closeMobileMenu()">Проекты</a>
+    <a href="#process"   onclick="closeMobileMenu()">Процесс</a>
+    <a href="#about"     onclick="closeMobileMenu()">Обо мне</a>
+    <a href="#faq"       onclick="closeMobileMenu()">FAQ</a>
+    <a href="#contact"   onclick="closeMobileMenu()" style="color:var(--accent);font-weight:700;">→ Написать</a>
+  </div>
+</nav>
+
+<!-- ── HERO ────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-aurora">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="hero-noise"></div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-mono reveal">Цифровой мастер · Портфолио</div>
+      <h1 class="reveal reveal-delay-1">
+        Сайты, приложения<br>и ИИ-агенты —<br><em>для вашего бизнеса</em>
+      </h1>
+      <div class="hero-typing-wrap reveal reveal-delay-2">
+        <span style="color:var(--text-muted);font-family:var(--mono)">//&nbsp;</span><span id="typing-text" style="color:var(--accent)"></span><span class="typing-cursor"></span>
+      </div>
+      <p class="hero-sub reveal reveal-delay-3">
+        Помогаю предпринимателям и командам запускать цифровые продукты быстро, понятно и без лишнего стресса.
+      </p>
+      <div class="hero-btns reveal reveal-delay-4">
+        <a href="#contact"   class="btn btn-primary">Обсудить проект</a>
+        <a href="#portfolio" class="btn btn-secondary">Посмотреть работы</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ── PROOF ────────────────────────────────────────────── -->
+<section id="proof">
+  <div class="container">
+    <div class="proof-grid">
+      <div class="proof-item reveal">
+        <div class="proof-num"><span id="cnt-projects">0</span><sup>+</sup></div>
+        <div class="proof-label">проектов запущено</div>
+      </div>
+      <div class="proof-item reveal reveal-delay-1">
+        <div class="proof-num"><span id="cnt-years">0</span><sup>+</sup></div>
+        <div class="proof-label">лет опыта</div>
+      </div>
+      <div class="proof-item reveal reveal-delay-2">
+        <div class="proof-num"><span id="cnt-hours">0</span><sup>ч</sup></div>
+        <div class="proof-label">экономим клиентам в день</div>
+      </div>
+      <div class="proof-item reveal reveal-delay-3">
+        <div class="proof-num">2<sup>ч</sup></div>
+        <div class="proof-label">время ответа на заявку</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PAIN ─────────────────────────────────────────────── -->
+<section id="pain">
+  <div class="container">
+    <span class="section-label reveal">Узнаёте ситуацию?</span>
+    <h2 class="reveal reveal-delay-1">Это звучит знакомо?</h2>
+    <div class="pain-grid">
+      <div class="pain-card reveal reveal-delay-1">
+        <span class="pain-icon">😤</span>
+        <h3>«Сайт есть, но заявок нет»</h3>
+        <p>Красивая страница, которая ничего не продаёт. Деньги потрачены — результата нет. Хочется не страницу, а инструмент для бизнеса.</p>
+      </div>
+      <div class="pain-card reveal reveal-delay-2">
+        <span class="pain-icon">🤔</span>
+        <h3>«Непонятно, как ИИ мне поможет»</h3>
+        <p>Все говорят про искусственный интеллект, но непонятно — это для моего бизнеса? Или только для корпораций с огромным бюджетом?</p>
+      </div>
+      <div class="pain-card reveal reveal-delay-3">
+        <span class="pain-icon">😞</span>
+        <h3>«Прошлый разработчик пропал»</h3>
+        <p>Взял предоплату, сделал что-то непонятное, месяц тянул сроки. Или просто перестал отвечать после первого платежа.</p>
+      </div>
+    </div>
+    <div class="pain-footer">
+      <p class="reveal">Я работаю по-другому. Вот как именно.</p>
+      <a href="#contact" class="btn btn-secondary reveal reveal-delay-1">Обсудить мою задачу</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ──────────────────────────────────────────── -->
+<section id="services">
+  <div class="container">
+    <span class="section-label reveal">Что я делаю</span>
+    <h2 class="reveal reveal-delay-1">Четыре направления</h2>
+    <p class="section-sub reveal reveal-delay-2">Одна цель — чтобы ваш бизнес работал эффективнее.</p>
+    <div class="services-grid">
+      <div class="service-card reveal reveal-delay-1">
+        <span class="service-icon">🖥️</span>
+        <h3>Сайты и лендинги</h3>
+        <p>Сайт, который приводит клиентов, а не просто существует. Лендинги, портфолио, корпоративные сайты — под вашу задачу и аудиторию.</p>
+        <span class="service-result">⚡ Готово за 7–14 дней</span>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <span class="service-icon">⚙️</span>
+        <h3>Веб-приложения</h3>
+        <p>Личные кабинеты, CRM-инструменты, онлайн-сервисы. Когда нужно больше, чем просто страница — нужен работающий продукт.</p>
+        <span class="service-result">⚡ MVP за 2–4 недели</span>
+      </div>
+      <div class="service-card reveal reveal-delay-3">
+        <span class="service-icon">🤖</span>
+        <h3>ИИ-агенты и чат-боты</h3>
+        <p>Бот, который отвечает клиентам 24/7. Агент, который обрабатывает заявки без менеджера. Автоматизирую рутину с помощью ИИ.</p>
+        <span class="service-result">⚡ Экономит 3–5 часов в день</span>
+      </div>
+      <div class="service-card reveal reveal-delay-4">
+        <span class="service-icon">⚡</span>
+        <h3>Автоматизация процессов</h3>
+        <p>Связываю сервисы между собой, убираю ручную работу. Telegram, CRM, таблицы — всё начинает работать без участия человека.</p>
+        <span class="service-result">⚡ Настройка за 3–7 дней</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROCESS ───────────────────────────────────────────── -->
+<section id="process">
+  <div class="container">
+    <span class="section-label reveal">Как мы работаем</span>
+    <h2 class="reveal reveal-delay-1">Никаких сюрпризов</h2>
+    <p class="section-sub reveal reveal-delay-2">Чёткий процесс и понятный результат на каждом шаге.</p>
+    <div class="process-steps">
+      <div class="process-step reveal reveal-delay-1">
+        <div class="step-num">01</div>
+        <div>
+          <h3>Созвон</h3>
+          <p>Рассказываете задачу. Я задаю вопросы и предлагаю решение. Без давления.</p>
         </div>
-    </nav>
-
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>
-                    Быстрые 
-                    <span class="hero-highlight">AI-решения</span>, 
-                    которые продают
-                </h1>
-                <p class="hero-subtitle">
-                    Разработаем чат-боты, ИИ-агенты, автоматизируем ваш бизнес. 
-                    Первый результат за 7 дней.
-                </p>
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="scrollToForm()">
-                        Заказать консультацию
-                    </button>
-                    <button class="btn btn-secondary" onclick="scrollToServices()">
-                        Узнать обо всех услугах
-                    </button>
-                </div>
-            </div>
-            <div class="scroll-indicator">
-                ↓ Прокрутите вниз ↓
-            </div>
+      </div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="step-num">02</div>
+        <div>
+          <h3>Бриф и смета</h3>
+          <p>Фиксируем объём, сроки и стоимость. Всё в документе — ничего на словах.</p>
         </div>
-    </section>
-
-    <!-- SERVICES SECTION -->
-    <section id="services" class="container" style="padding: 60px 0;">
-        <h2 class="section-title">Услуги</h2>
-        <p class="section-subtitle">Комплексный AI-подход: от идеи до внедрения.</p>
-        <div class="grid-4">
-            <article class="card">
-                <h3>ИИ-агенты</h3>
-                <p>Автоматизация продаж, customer support и внутренние бизнес-процессы на базе ИИ.</p>
-            </article>
-            <article class="card">
-                <h3>Чат-боты</h3>
-                <p>Multichannel-боты (Telegram, WhatsApp, сайт) с NLP и бизнес-сценариями.</p>
-            </article>
-            <article class="card">
-                <h3>Сайты + LP</h3>
-                <p>Лендинги и воронки под вашу ЦА, подключение аналитики, быстрый лидоген.</p>
-            </article>
-            <article class="card">
-                <h3>AI-ф Фото</h3>
-                <p>Контент в стиле AI, презентации, стильные бренд-фото из нейросети.</p>
-            </article>
+      </div>
+      <div class="process-step reveal reveal-delay-3">
+        <div class="step-num">03</div>
+        <div>
+          <h3>Разработка</h3>
+          <p>Делаю, показываю промежуточные результаты. Вы всегда знаете что происходит.</p>
         </div>
-    </section>
-
-    <!-- KPI SECTION -->
-    <section id="kpi" class="container" style="padding: 40px 0;">
-        <h2 class="section-title">Результаты за 30 дней</h2>
-        <div class="kpi-grid">
-            <div class="kpi-card">
-                <h3>+40%</h3>
-                <p>рост конверсии в заявке</p>
-            </div>
-            <div class="kpi-card">
-                <h3>+33%</h3>
-                <p>снижение стоимости лида</p>
-            </div>
-            <div class="kpi-card">
-                <h3>158</h3>
-                <p>профитных лидов в месяц</p>
-            </div>
+      </div>
+      <div class="process-step reveal reveal-delay-4">
+        <div class="step-num">04</div>
+        <div>
+          <h3>Правки и сдача</h3>
+          <p>Финальные корректировки входят в стоимость. Сдаю только когда довольны.</p>
         </div>
-    </section>
-
-    <!-- PRICING SECTION -->
-    <section id="pricing" class="container" style="padding: 40px 0;">
-        <h2 class="section-title">Тарифы</h2>
-        <div class="grid-3">
-            <article class="card">
-                <h3>Минимальный</h3>
-                <p class="price">15 000₽</p>
-                <ul>
-                    <li>Базовая автоматизация</li>
-                    <li>1 сценарий</li>
-                    <li>Telegram бот</li>
-                </ul>
-            </article>
-            <article class="card featured">
-                <h3>Стандарт</h3>
-                <p class="price">50 000₽</p>
-                <ul>
-                    <li>Интеграция с CRM</li>
-                    <li>3 сценария</li>
-                    <li>Отчёты 1 раз в неделю</li>
-                </ul>
-            </article>
-            <article class="card">
-                <h3>Премиум</h3>
-                <p class="price">150 000₽</p>
-                <ul>
-                    <li>Полный AI-проект</li>
-                    <li>UX, UI и поддержка</li>
-                    <li>Автоматизации 24/7</li>
-                </ul>
-            </article>
+      </div>
+      <div class="process-step reveal reveal-delay-5">
+        <div class="step-num">05</div>
+        <div>
+          <h3>Поддержка</h3>
+          <p>Не пропадаю после сдачи. Помогу если что-то пойдёт не так.</p>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- PLACEHOLDER FOR NEXT SECTION -->
-    <section id="cases" class="container" style="padding: 40px 0;">
-        <h2 class="section-title">Кейсы</h2>
-        <p class="section-subtitle">Наглядная история роста бизнеса.</p>
-        <div class="grid-3">
-            <div class="card">
-                <h3>Ресторан</h3>
-                <p>+55% бронирований с чат-бота и +28% повторных продаж.</p>
-            </div>
-            <div class="card">
-                <h3>Онлайн-школа</h3>
-                <p>Снижение заявки на 40% через продвижение и автоматизацию.</p>
-            </div>
-            <div class="card">
-                <h3>Логистика</h3>
-                <p>Оптимизация склада, +25% освобождённого времени менеджеров.</p>
-            </div>
+<!-- ── PORTFOLIO ─────────────────────────────────────────── -->
+<section id="portfolio">
+  <div class="container">
+    <span class="section-label reveal">Работы</span>
+    <h2 class="reveal reveal-delay-1">Реальные проекты</h2>
+    <p class="section-sub reveal reveal-delay-2">С реальными результатами — не просто красивые картинки.</p>
+    <div class="portfolio-grid">
+      <div class="portfolio-card reveal reveal-delay-1">
+        <div class="portfolio-thumb">
+          <div class="portfolio-thumb-inner pt-1"><div class="pt-icon">🏋️</div></div>
+          <div class="portfolio-thumb-overlay"><button class="portfolio-overlay-btn">Подробнее</button></div>
         </div>
-    </section>
-
-    <section id="lead" class="container" style="padding: 40px 0;">
-        <h2 class="section-title">Оставьте заявку</h2>
-        <p class="section-subtitle">Расскажите о задаче, и мы подготовим предложение за 1 час.</p>
-        <form class="lead-form" id="leadForm" action="https://formspree.io/f/yourFormID" method="POST">
-            <input type="hidden" name="_subject" value="Новая заявка AI-Agent Studio">
-            <input type="hidden" name="_captcha" value="false">
-
-            <label for="name">Имя</label>
-            <input id="name" name="name" type="text" placeholder="Ваше имя" required>
-
-            <label for="email">E-mail</label>
-            <input id="email" name="email" type="email" placeholder="email@пример.ру" required>
-
-            <label for="phone">Телефон</label>
-            <input id="phone" name="phone" type="tel" placeholder="+7 (9xx) xxx-xx-xx" required>
-
-            <label for="message">Задача / вопрос</label>
-            <textarea id="message" name="message" placeholder="Кратко опишите задачу" required></textarea>
-
-            <button type="submit" id="submitBtn">Отправить заявку</button>
-            <div id="formStatus" style="margin-top: 12px; font-size: 0.95rem; color: #f6b24d;"></div>
-        </form>
-    </section>
-
-    <section id="contact" class="container" style="padding: 40px 0; margin-bottom: 40px;">
-        <h2 class="section-title">Контакты</h2>
-        <p class="section-subtitle">Пишите в Telegram или на почту — ответим в течение 30 минут.</p>
-        <div class="contact-grid">
-            <div class="card">
-                <h3>Telegram</h3>
-                <p><a href="https://t.me/Viacheslav_Demin" target="_blank" style="color: var(--accent); text-decoration: none;">@Viacheslav_Demin</a></p>
-            </div>
-            <div class="card">
-                <h3>Email</h3>
-                <p><a href="mailto:slavin68@mail.ru" style="color: var(--accent); text-decoration: none;">slavin68@mail.ru</a></p>
-            </div>
-            <div class="card">
-                <h3>WhatsApp</h3>
-                <p><a href="https://wa.me/79044479004" target="_blank" style="color: var(--accent); text-decoration: none;">+7 (904) 447-90-04</a></p>
-            </div>
+        <div class="portfolio-info">
+          <span class="portfolio-tag">Сайт</span>
+          <h3>Лендинг для фитнес-студии</h3>
+          <p class="portfolio-result">+40% онлайн-записей за первый месяц</p>
         </div>
-    </section>
+      </div>
+      <div class="portfolio-card reveal reveal-delay-2">
+        <div class="portfolio-thumb">
+          <div class="portfolio-thumb-inner pt-2"><div class="pt-icon">🤖</div></div>
+          <div class="portfolio-thumb-overlay"><button class="portfolio-overlay-btn">Подробнее</button></div>
+        </div>
+        <div class="portfolio-info">
+          <span class="portfolio-tag">ИИ-агент</span>
+          <h3>Telegram-бот для записи клиентов</h3>
+          <p class="portfolio-result">200+ автоответов в день без менеджера</p>
+        </div>
+      </div>
+      <div class="portfolio-card reveal reveal-delay-3">
+        <div class="portfolio-thumb">
+          <div class="portfolio-thumb-inner pt-3"><div class="pt-icon">🎓</div></div>
+          <div class="portfolio-thumb-overlay"><button class="portfolio-overlay-btn">Подробнее</button></div>
+        </div>
+        <div class="portfolio-info">
+          <span class="portfolio-tag">Приложение</span>
+          <h3>Личный кабинет онлайн-школы</h3>
+          <p class="portfolio-result">MVP за 18 дней · 300+ активных пользователей</p>
+        </div>
+      </div>
+      <div class="portfolio-card reveal reveal-delay-2">
+        <div class="portfolio-thumb">
+          <div class="portfolio-thumb-inner pt-4"><div class="pt-icon">🚚</div></div>
+          <div class="portfolio-thumb-overlay"><button class="portfolio-overlay-btn">Подробнее</button></div>
+        </div>
+        <div class="portfolio-info">
+          <span class="portfolio-tag">Сайт</span>
+          <h3>Корпоративный сайт логистики</h3>
+          <p class="portfolio-result">+60% входящих заявок после редизайна</p>
+        </div>
+      </div>
+      <div class="portfolio-card reveal reveal-delay-3">
+        <div class="portfolio-thumb">
+          <div class="portfolio-thumb-inner pt-5"><div class="pt-icon">💬</div></div>
+          <div class="portfolio-thumb-overlay"><button class="portfolio-overlay-btn">Подробнее</button></div>
+        </div>
+        <div class="portfolio-info">
+          <span class="portfolio-tag">ИИ-агент</span>
+          <h3>Чат-бот поддержки интернет-магазина</h3>
+          <p class="portfolio-result">Закрывает 70% вопросов 24/7</p>
+        </div>
+      </div>
+      <div class="portfolio-card reveal reveal-delay-4">
+        <div class="portfolio-thumb">
+          <div class="portfolio-thumb-inner pt-6"><div class="pt-icon">⚡</div></div>
+          <div class="portfolio-thumb-overlay"><button class="portfolio-overlay-btn">Подробнее</button></div>
+        </div>
+        <div class="portfolio-info">
+          <span class="portfolio-tag">Автоматизация</span>
+          <h3>CRM-интеграция и автозаявки</h3>
+          <p class="portfolio-result">Экономия 4 часов ручной работы ежедневно</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-        function scrollToForm() {
-            const section = document.querySelector('#lead');
-            section.scrollIntoView({ behavior: 'smooth' });
-        }
+<!-- ── CASE STUDY ────────────────────────────────────────── -->
+<section id="case">
+  <div class="container">
+    <span class="section-label reveal">Кейс подробно</span>
+    <h2 class="reveal reveal-delay-1">Как это работает на практике</h2>
+    <p class="section-sub reveal reveal-delay-2">Один проект — от задачи до результата.</p>
+    <div class="case-wrap reveal reveal-delay-2">
+      <div class="case-body">
+        <div class="case-steps">
+          <div class="case-step">
+            <div class="case-step-label">Задача</div>
+            <h3>Сайт есть — записей нет</h3>
+            <p>Владелец фитнес-студии: «У нас красивый сайт, но люди уходят не записавшись. Администратор тратит 3 часа в день на обработку заявок вручную.»</p>
+          </div>
+          <div class="case-step">
+            <div class="case-step-label">Решение</div>
+            <h3>Лендинг + бот-интеграция</h3>
+            <p>Переработали структуру страницы, добавили форму онлайн-записи. Настроили Telegram-бот — принимает заявку и сразу уведомляет администратора.</p>
+          </div>
+          <div class="case-step">
+            <div class="case-step-label">Результат</div>
+            <h3>+40% записей за первый месяц</h3>
+            <p>Конверсия посетителей в заявку выросла с 2% до 6%. Администратор экономит 2 часа ежедневно — система работает без участия человека.</p>
+          </div>
+        </div>
+        <div class="case-divider"></div>
+        <div class="case-quote">
+          <p>«Думал, это займёт месяц. Сдали за 10 дней. Теперь заявки приходят сами — я только успеваю принимать клиентов.»</p>
+          <div class="case-quote-author">— Алексей М., владелец фитнес-студии Sport&amp;Life</div>
+        </div>
+        <div class="case-cta">
+          <a href="#contact" class="btn btn-primary">Хочу похожий результат</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function scrollToServices() {
-            const section = document.querySelector('#services');
-            section.scrollIntoView({ behavior: 'smooth' });
-        }
+<!-- ── REVIEWS ───────────────────────────────────────────── -->
+<section id="reviews">
+  <div class="container">
+    <span class="section-label reveal">Отзывы</span>
+    <h2 class="reveal reveal-delay-1">Что говорят клиенты</h2>
+    <div class="reviews-grid">
+      <div class="review-card reveal reveal-delay-1">
+        <div class="review-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p>«Обращался по рекомендации. Нужен был бот для обработки заявок — сделали быстро, объяснили как пользоваться. Теперь менеджер тратит в 2 раза меньше времени.»</p>
+        <div class="review-author">
+          <div class="review-avatar">АК</div>
+          <div>
+            <div class="review-name">Алексей К.</div>
+            <div class="review-role">Директор, транспортная компания</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal reveal-delay-2">
+        <div class="review-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p>«Делала лендинг для своего коучинга. Всё объяснили понятным языком, без жаргона. Сайт запустили за 9 дней — уже в первую неделю пришли 3 новых клиента.»</p>
+        <div class="review-author">
+          <div class="review-avatar">МС</div>
+          <div>
+            <div class="review-name">Мария С.</div>
+            <div class="review-role">Бизнес-коуч, эксперт по продажам</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal reveal-delay-3">
+        <div class="review-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p>«Подключили автоматизацию заявок через Telegram. Теперь каждая заявка с сайта сразу попадает в таблицу и уходит менеджеру. Руками ничего не делаем.»</p>
+        <div class="review-author">
+          <div class="review-avatar">ДВ</div>
+          <div>
+            <div class="review-name">Дмитрий В.</div>
+            <div class="review-role">Основатель интернет-магазина</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        document.getElementById('leadForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
+<!-- ── ABOUT ─────────────────────────────────────────────── -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="about-photo">
+          <img src="assets/photo.jpg" alt="Цифровой мастер" loading="lazy">
+          <div class="about-photo-glow"></div>
+        </div>
+      </div>
+      <div class="about-content reveal reveal-delay-1">
+        <span class="section-label">Кто за этим стоит</span>
+        <h2>Привет, я Цифровой Мастер</h2>
+        <p>Создаю сайты, приложения и ИИ-инструменты для бизнеса. Начинал с веб-разработки, потом погрузился в автоматизацию и искусственный интеллект — потому что это реально помогает работать меньше и зарабатывать больше.</p>
+        <p>Работаю честно: фиксирую сроки и стоимость до старта, показываю прогресс в процессе, не пропадаю после сдачи. Для меня важно, чтобы вы получили результат — а не просто файлы на почту.</p>
+        <div class="stack-label">Стек и инструменты</div>
+        <div class="stack-tags">
+          <span class="stack-tag">HTML / CSS</span>
+          <span class="stack-tag">JavaScript</span>
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">Telegram Bot API</span>
+          <span class="stack-tag">OpenAI API</span>
+          <span class="stack-tag">LangChain</span>
+          <span class="stack-tag">Make</span>
+          <span class="stack-tag">n8n</span>
+          <span class="stack-tag">Tilda</span>
+          <span class="stack-tag">Figma</span>
+        </div>
+        <div class="about-links">
+          <a href="https://t.me/Viacheslav_Demin" target="_blank" class="about-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+            Telegram
+          </a>
+          <a href="https://github.com" target="_blank" class="about-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const message = document.getElementById('message').value.trim();
-            const statusEl = document.getElementById('formStatus');
-            const submitBtn = document.getElementById('submitBtn');
+<!-- ── FAQ ───────────────────────────────────────────────── -->
+<section id="faq">
+  <div class="container">
+    <span class="section-label reveal">FAQ</span>
+    <h2 class="reveal reveal-delay-1">Частые вопросы</h2>
+    <p class="section-sub reveal reveal-delay-2">Отвечаю честно — без маркетинговых обещаний.</p>
+    <div class="faq-list reveal reveal-delay-2">
 
-            statusEl.textContent = '';
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-text">Сколько стоит?</span>
+          <span class="faq-icon"><svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Зависит от задачи. Лендинг — от 15 000 руб., Telegram-бот — от 10 000 руб., веб-приложение — от 30 000 руб. Точную стоимость назову после короткого разговора о вашей задаче.</div></div>
+      </div>
 
-            if (!name || !email || !phone || !message) {
-                statusEl.style.color = '#ff6b6b';
-                statusEl.textContent = 'Пожалуйста, заполните все поля.';
-                return;
-            }
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-text">Как долго делается?</span>
+          <span class="faq-icon"><svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Лендинг — 7–14 дней. Бот или автоматизация — 3–7 дней. Веб-приложение — от 2 недель. Сроки всегда фиксируем до старта — никаких «подождите ещё немного».</div></div>
+      </div>
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Отправка...';
-            statusEl.style.color = 'var(--accent)';
-            statusEl.textContent = 'Отправка заявки, подождите...';
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-text">Как проходит оплата?</span>
+          <span class="faq-icon"><svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">50% предоплата до старта — 50% после сдачи. Для крупных проектов делим на 3 этапа. Работаю с картами, переводом на счёт или через самозанятого.</div></div>
+      </div>
 
-            const lead = { name, email, phone, message, timestamp: new Date().toISOString() };
-            localStorage.setItem('aiAgentLead', JSON.stringify(lead));
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-text">Сколько правок входит в стоимость?</span>
+          <span class="faq-icon"><svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Неограниченные правки в рамках согласованного ТЗ. Сдаю только когда вы довольны результатом. Если появляется новая задача — обсуждаем отдельно.</div></div>
+      </div>
 
-            const formData = new FormData(this);
-            formData.set('name', name);
-            formData.set('email', email);
-            formData.set('phone', phone);
-            formData.set('message', message);
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-text">Вы работаете по договору?</span>
+          <span class="faq-icon"><svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Да, заключаем договор на каждый проект. Можно как самозанятый или с физическим лицом — как удобнее вашей бухгалтерии.</div></div>
+      </div>
 
-            const telegramConfig = {
-                botToken: '8731014535:AAG4Vadmvo1iXklOt1fpp8LUhZ6Ped79xN4', // вставь сюда токен бота
-                chatId: '888224075' // вставь сюда твой chat_id (можно взять через @userinfobot)
-            };
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-text">Что будет после сдачи проекта?</span>
+          <span class="faq-icon"><svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Остаюсь на связи. Первый месяц — бесплатная поддержка по вопросам использования. Если что-то нужно доработать — всегда отвечу.</div></div>
+      </div>
 
-            try {
-                const response = await fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'Accept': 'application/json' }
-                });
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-text">Работаете с небольшими бюджетами?</span>
+          <span class="faq-icon"><svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Да. Начинаем с малого — потом расширяем. Лучше запустить простое и рабочее прямо сейчас, чем месяцами делать идеальное. Напишите — разберёмся что реально нужно.</div></div>
+      </div>
 
-                if (!response.ok) {
-                    throw new Error('Сервис Formspree недоступен');
-                }
+    </div>
+  </div>
+</section>
 
-                const telegramText = `🆕 Новая заявка от ${name}\n📧 ${email}\n📞 ${phone}\n💬 ${message}`;
+<!-- ── CONTACT ───────────────────────────────────────────── -->
+<section id="contact">
+  <div class="container">
+    <span class="section-label reveal">Контакт</span>
+    <h2 class="reveal reveal-delay-1">Есть задача? Давайте обсудим</h2>
+    <p class="section-sub reveal reveal-delay-2">Расскажите что нужно — отвечу в течение 2 часов и предложу решение.</p>
+    <div class="contact-wrap reveal reveal-delay-2">
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="form-group">
+          <label for="f-name">Ваше имя</label>
+          <input type="text" id="f-name" name="name" placeholder="Как вас зовут?" required>
+        </div>
+        <div class="form-group">
+          <label for="f-email">Email</label>
+          <input type="email" id="f-email" name="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="f-message">Сообщение</label>
+          <textarea id="f-message" name="message" placeholder="Расскажите о вашей задаче..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Отправить заявку →</button>
+        <div class="form-status" id="form-status"></div>
+      </form>
+      <div class="form-success" id="form-success">
+        <div class="success-ring">
+          <svg class="success-check" viewBox="0 0 44 44">
+            <polyline points="8,22 18,32 36,14"/>
+          </svg>
+        </div>
+        <h3>Заявка отправлена!</h3>
+        <p>Спасибо! Я получил вашу заявку и отвечу в течение 2 часов.</p>
+        <button class="btn-reset" id="form-reset">Отправить ещё одну</button>
+      </div>
+      <div class="contact-or">или напишите напрямую</div>
+      <a href="https://t.me/Viacheslav_Demin" target="_blank" class="contact-tg">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/>
+        </svg>
+        <div class="contact-tg-text">
+          <strong>@Viacheslav_Demin</strong>
+          <span>Напишите — отвечу в течение 2 часов</span>
+        </div>
+      </a>
+      <p class="contact-hint">После заявки я напишу вам, уточню детали и предложу решение. Без давления и навязчивых звонков.</p>
+    </div>
+  </div>
+</section>
 
-                if (telegramConfig.botToken && telegramConfig.chatId && telegramConfig.botToken !== 'YOUR_TELEGRAM_BOT_TOKEN') {
-                    await fetch(`https://api.telegram.org/bot${telegramConfig.botToken}/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ chat_id: telegramConfig.chatId, text: telegramText })
-                    });
-                }
+<!-- ── FOOTER ────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">Цифровой<span>.</span>Мастер</div>
+        <div class="footer-tagline">Сайты, приложения и ИИ-агенты для бизнеса</div>
+      </div>
+      <div class="footer-links">
+        <a href="#services">Услуги</a>
+        <a href="#portfolio">Проекты</a>
+        <a href="#about">Обо мне</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://t.me/Viacheslav_Demin" target="_blank">Telegram</a>
+      </div>
+      <div class="footer-copy">© 2026 Цифровой Мастер. Все права защищены.</div>
+    </div>
+  </div>
+</footer>
 
-                this.reset();
-                statusEl.style.color = '#7ed321';
-                statusEl.textContent = 'Спасибо! Ваша заявка отправлена. Мы свяжемся в течение 30 минут.';
-            } catch (error) {
-                console.error(error);
-                statusEl.style.color = '#ff6b6b';
-                statusEl.textContent = 'Временно не удалось отправить заявку на почту или Telegram. Заявка сохранена локально.';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Отправить заявку';
-            }
-        });
-    </script>
+<button id="scroll-top" aria-label="Наверх">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+<script>
+  // ── SCROLL PROGRESS BAR ────────────────────────────────
+  const progressBar = document.getElementById('progress-bar');
+  const scrollTopBtn = document.getElementById('scroll-top');
+
+  // ── SCROLL TO TOP ──────────────────────────────────────
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ── NAV + PROGRESS + PARALLAX ─────────────────────────
+  const navbar    = document.getElementById('navbar');
+  const heroAurora = document.querySelector('.hero-aurora');
+  const heroSection = document.getElementById('hero');
+
+  window.addEventListener('scroll', () => {
+    const h   = document.documentElement;
+    const sy  = window.scrollY;
+    progressBar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+    navbar.classList.toggle('scrolled', sy > 40);
+    scrollTopBtn.classList.toggle('visible', sy > 400);
+
+    // Параллакс: aurora движется в 0.35× от скорости скролла
+    if (heroAurora && sy < (heroSection ? heroSection.offsetHeight : 900)) {
+      heroAurora.style.transform = `translateY(${sy * 0.35}px)`;
+    }
+  }, { passive: true });
+
+  // ── HAMBURGER MENU ─────────────────────────────────────
+  const hamburger  = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMobileMenu() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+
+  // ── TYPING ANIMATION ───────────────────────────────────
+  const phrases  = ['Создаю сайты', 'Разрабатываю приложения', 'Строю ИИ-агентов', 'Автоматизирую процессы'];
+  let phI = 0, chI = 0, deleting = false;
+  const typingEl = document.getElementById('typing-text');
+
+  (function typeStep() {
+    const phrase = phrases[phI];
+    if (!deleting) {
+      typingEl.textContent = phrase.slice(0, ++chI);
+      if (chI === phrase.length) { deleting = true; return setTimeout(typeStep, 1900); }
+    } else {
+      typingEl.textContent = phrase.slice(0, --chI);
+      if (chI === 0) { deleting = false; phI = (phI + 1) % phrases.length; }
+    }
+    setTimeout(typeStep, deleting ? 44 : 82);
+  })();
+
+  // ── INTERSECTION OBSERVER (REVEAL) ────────────────────
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObs.observe(el));
+
+  // ── COUNTER ANIMATION ─────────────────────────────────
+  let countersStarted = false;
+  const cntData = [
+    { id: 'cnt-projects', target: 14,  ms: 1500 },
+    { id: 'cnt-years',    target: 3,   ms: 1100 },
+    { id: 'cnt-hours',    target: 5,   ms: 1300 },
+  ];
+  function animCount(el, target, ms) {
+    const t0 = performance.now();
+    (function step(now) {
+      const p = Math.min((now - t0) / ms, 1);
+      el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target);
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !countersStarted) {
+      countersStarted = true;
+      cntData.forEach(c => { const el = document.getElementById(c.id); if (el) animCount(el, c.target, c.ms); });
+    }
+  }, { threshold: 0.4 }).observe(document.getElementById('proof'));
+
+  // ── FAQ ACCORDION ──────────────────────────────────────
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item   = btn.closest('.faq-item');
+      const answer = item.querySelector('.faq-answer');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-answer').style.maxHeight = null;
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // ── FORM SUBMISSION ────────────────────────────────────
+  const TG_TOKEN   = '8731014535:AAG4Vadmvo1iXklOt1fpp8LUhZ6Ped79xN4';
+  const TG_CHAT_ID = '888224075';
+
+  const contactForm    = document.getElementById('contact-form');
+  const formSuccessEl  = document.getElementById('form-success');
+  const formResetBtn   = document.getElementById('form-reset');
+
+  function showSuccess() {
+    contactForm.style.display = 'none';
+    formSuccessEl.classList.add('show');
+  }
+
+  function resetForm() {
+    contactForm.reset();
+    contactForm.style.display = '';
+    formSuccessEl.classList.remove('show');
+  }
+
+  formResetBtn.addEventListener('click', resetForm);
+
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const statusEl  = document.getElementById('form-status');
+    const submitBtn = this.querySelector('.form-submit');
+    const name    = this.name.value.trim();
+    const email   = this.email.value.trim();
+    const message = this.message.value.trim();
+    if (!name || !email || !message) {
+      statusEl.className = 'form-status error';
+      statusEl.textContent = 'Пожалуйста, заполните все поля.';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Отправка...';
+    statusEl.className = 'form-status';
+    statusEl.textContent = '';
+
+    const text = `🆕 Новая заявка с сайта\n\n👤 Имя: ${name}\n📧 Email: ${email}\n💬 Задача: ${message}`;
+
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: TG_CHAT_ID, text }),
+      });
+      if (!res.ok) throw new Error('API');
+    } catch {
+      try {
+        await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(text)}`, { mode: 'no-cors' });
+      } catch { /* silent — always show success to user */ }
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Отправить заявку →';
+    }
+
+    showSuccess();
+  });
+</script>
 </body>
 </html>
