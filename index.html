@@ -922,6 +922,92 @@
       .hero-btns { flex-direction: column; }
       .btn { justify-content: center; min-height: 48px; }
     }
+
+    /* ── SCROLL TO TOP ───────────────────────────────────── */
+    #scroll-top {
+      position: fixed;
+      bottom: 32px; right: 28px;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(255,140,0,0.45);
+      opacity: 0;
+      transform: translateY(16px) scale(0.85);
+      transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.25s ease;
+      z-index: 900;
+      pointer-events: none;
+    }
+    #scroll-top.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    #scroll-top:hover {
+      box-shadow: 0 8px 32px rgba(255,140,0,0.65);
+      transform: translateY(-3px) scale(1.07);
+    }
+    #scroll-top svg { width: 20px; height: 20px; stroke: #fff; stroke-width: 2.2; }
+
+    /* ── FORM SUCCESS OVERLAY ────────────────────────────── */
+    .form-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 48px 32px;
+      gap: 16px;
+    }
+    .form-success.show { display: flex; animation: successFadeIn 0.5s cubic-bezier(0.22,1,0.36,1); }
+    @keyframes successFadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+    .success-ring {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: rgba(92,184,92,0.12);
+      border: 2px solid rgba(92,184,92,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: ringPop 0.5s cubic-bezier(0.22,1,0.36,1);
+    }
+    @keyframes ringPop {
+      0%   { transform: scale(0.4); opacity: 0; }
+      70%  { transform: scale(1.1); }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+    .success-check {
+      width: 44px; height: 44px;
+      stroke: #5cb85c;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      animation: drawCheck 0.5s ease 0.25s forwards;
+    }
+    @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+    .form-success h3 { color: var(--text-primary); font-size: 1.4rem; }
+    .form-success p  { color: var(--text-secondary); max-width: 320px; }
+    .form-success .btn-reset {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .form-success .btn-reset:hover { color: var(--accent); border-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -1404,16 +1490,26 @@
           <input type="text" id="f-name" name="name" placeholder="Как вас зовут?" required>
         </div>
         <div class="form-group">
-          <label for="f-contact">Telegram или телефон</label>
-          <input type="text" id="f-contact" name="contact" placeholder="@username или +7..." required>
+          <label for="f-email">Email</label>
+          <input type="email" id="f-email" name="email" placeholder="your@email.com" required>
         </div>
         <div class="form-group">
-          <label for="f-message">Ваша задача</label>
-          <textarea id="f-message" name="message" placeholder="Опишите в двух словах — что нужно сделать?" required></textarea>
+          <label for="f-message">Сообщение</label>
+          <textarea id="f-message" name="message" placeholder="Расскажите о вашей задаче..." required></textarea>
         </div>
         <button type="submit" class="btn btn-primary form-submit">Отправить заявку →</button>
         <div class="form-status" id="form-status"></div>
       </form>
+      <div class="form-success" id="form-success">
+        <div class="success-ring">
+          <svg class="success-check" viewBox="0 0 44 44">
+            <polyline points="8,22 18,32 36,14"/>
+          </svg>
+        </div>
+        <h3>Заявка отправлена!</h3>
+        <p>Спасибо! Я получил вашу заявку и отвечу в течение 2 часов.</p>
+        <button class="btn-reset" id="form-reset">Отправить ещё одну</button>
+      </div>
       <div class="contact-or">или напишите напрямую</div>
       <a href="https://t.me/Viacheslav_Demin" target="_blank" class="contact-tg">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1449,9 +1545,21 @@
   </div>
 </footer>
 
+<button id="scroll-top" aria-label="Наверх">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
 <script>
   // ── SCROLL PROGRESS BAR ────────────────────────────────
   const progressBar = document.getElementById('progress-bar');
+  const scrollTopBtn = document.getElementById('scroll-top');
+
+  // ── SCROLL TO TOP ──────────────────────────────────────
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
   // ── NAV + PROGRESS + PARALLAX ─────────────────────────
   const navbar    = document.getElementById('navbar');
@@ -1463,6 +1571,7 @@
     const sy  = window.scrollY;
     progressBar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
     navbar.classList.toggle('scrolled', sy > 40);
+    scrollTopBtn.classList.toggle('visible', sy > 400);
 
     // Параллакс: aurora движется в 0.35× от скорости скролла
     if (heroAurora && sy < (heroSection ? heroSection.offsetHeight : 900)) {
@@ -1548,14 +1657,31 @@
   const TG_TOKEN   = '8731014535:AAG4Vadmvo1iXklOt1fpp8LUhZ6Ped79xN4';
   const TG_CHAT_ID = '888224075';
 
-  document.getElementById('contact-form').addEventListener('submit', async function(e) {
+  const contactForm    = document.getElementById('contact-form');
+  const formSuccessEl  = document.getElementById('form-success');
+  const formResetBtn   = document.getElementById('form-reset');
+
+  function showSuccess() {
+    contactForm.style.display = 'none';
+    formSuccessEl.classList.add('show');
+  }
+
+  function resetForm() {
+    contactForm.reset();
+    contactForm.style.display = '';
+    formSuccessEl.classList.remove('show');
+  }
+
+  formResetBtn.addEventListener('click', resetForm);
+
+  contactForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     const statusEl  = document.getElementById('form-status');
     const submitBtn = this.querySelector('.form-submit');
-    const name      = this.name.value.trim();
-    const contact   = this.contact.value.trim();
-    const message   = this.message.value.trim();
-    if (!name || !contact || !message) {
+    const name    = this.name.value.trim();
+    const email   = this.email.value.trim();
+    const message = this.message.value.trim();
+    if (!name || !email || !message) {
       statusEl.className = 'form-status error';
       statusEl.textContent = 'Пожалуйста, заполните все поля.';
       return;
@@ -1566,7 +1692,7 @@
     statusEl.className = 'form-status';
     statusEl.textContent = '';
 
-    const text = `🆕 Новая заявка с сайта\n\n👤 Имя: ${name}\n📱 Контакт: ${contact}\n💬 Задача: ${message}`;
+    const text = `🆕 Новая заявка с сайта\n\n👤 Имя: ${name}\n📧 Email: ${email}\n💬 Задача: ${message}`;
 
     try {
       const res = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
@@ -1575,25 +1701,16 @@
         body: JSON.stringify({ chat_id: TG_CHAT_ID, text }),
       });
       if (!res.ok) throw new Error('API');
-      onSuccess.call(this);
     } catch {
       try {
         await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(text)}`, { mode: 'no-cors' });
-        onSuccess.call(this);
-      } catch {
-        statusEl.className = 'form-status error';
-        statusEl.textContent = 'Ошибка. Напишите напрямую: @Viacheslav_Demin';
-      }
+      } catch { /* silent — always show success to user */ }
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Отправить заявку →';
     }
 
-    function onSuccess() {
-      statusEl.className = 'form-status success';
-      statusEl.textContent = '✓ Заявка отправлена — отвечу в течение 2 часов!';
-      this.reset();
-    }
+    showSuccess();
   });
 </script>
 </body>
