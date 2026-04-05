@@ -24,7 +24,7 @@
       --accent-glow:  rgba(255,140,0,0.18);
       --border:       rgba(255,255,255,0.08);
       --radius:   12px;
-      --radius-lg: 20px;
+      --radius-lg: 24px;
       --transition: 0.3s ease;
       --container: 1160px;
       --mono: 'JetBrains Mono','Fira Code','Courier New',monospace;
@@ -278,22 +278,27 @@
     }
 
     .hero-content { position: relative; z-index: 2; max-width: 800px; }
-    .hero-mono {
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--accent);
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      margin-bottom: 22px;
-      display: flex;
+    .hero-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 9px;
+      background: rgba(255,140,0,0.08);
+      border: 1px solid rgba(255,140,0,0.22);
+      border-radius: 100px;
+      padding: 7px 18px;
+      font-size: 0.82rem;
+      color: #ffb347;
+      margin-bottom: 26px;
     }
-    .hero-mono::before {
-      content: '';
-      display: inline-block;
-      width: 32px; height: 1px;
+    .hero-badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
       background: var(--accent);
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+    @keyframes badgePulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.5; transform: scale(1.4); }
     }
 
     .hero h1 { margin-bottom: 22px; }
@@ -452,12 +457,13 @@
     .service-card p  { position: relative; margin-bottom: 20px; }
     .service-result {
       font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--accent);
-      background: var(--accent-glow);
-      border: 1px solid rgba(255,140,0,0.22);
-      border-radius: 6px;
-      padding: 5px 12px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #ffaa44;
+      background: rgba(255,140,0,0.1);
+      border: 1px solid rgba(255,140,0,0.2);
+      border-radius: 100px;
+      padding: 4px 14px;
       display: inline-block;
       position: relative;
     }
@@ -491,24 +497,23 @@
     }
     .step-num {
       width: 46px; height: 46px;
-      border-radius: 50%;
-      background: var(--bg-card);
-      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      background: var(--accent);
+      border: none;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--mono);
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #fff;
       margin-bottom: 20px;
       flex-shrink: 0;
-      transition: border-color var(--transition), color var(--transition), background var(--transition);
+      transition: box-shadow var(--transition), transform var(--transition);
     }
     .process-step:hover .step-num {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--accent-glow);
+      box-shadow: 0 6px 20px rgba(255,140,0,0.45);
+      transform: scale(1.08);
     }
     .process-step h3 { font-size: 0.93rem; margin-bottom: 8px; }
     .process-step p  { font-size: 0.83rem; }
@@ -1052,7 +1057,10 @@
   </div>
   <div class="container">
     <div class="hero-content">
-      <div class="hero-mono reveal">Цифровой мастер · Портфолио</div>
+      <div class="hero-badge reveal">
+        <span class="hero-badge-dot"></span>
+        Доступен для новых проектов
+      </div>
       <h1 class="reveal reveal-delay-1">
         Сайты, приложения<br>и ИИ-агенты —<br><em>для вашего бизнеса</em>
       </h1>
