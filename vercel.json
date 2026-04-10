@@ -1,5 +1,6 @@
 {
-  "rewrites": [
-    { "source": "/tma", "destination": "/tma.html" }
+  "routes": [
+    { "src": "/tma", "dest": "/tma.html" },
+    { "src": "/", "dest": "/index.html" }
   ]
 }
