@@ -659,10 +659,10 @@ const SERVICES = [
 ];
 
 const PORTFOLIO = [
-  { id:'p1', emoji:'🏋️', name:'Лендинг фитнес-студии', cat:'sites', result:'+40% онлайн-записей', grad:'linear-gradient(135deg,#1e3a5f,#2d6a4f)',
-    desc:'Продающий лендинг с онлайн-записью, интеграцией AmoCRM и блоком отзывов.' },
-  { id:'p2', emoji:'🤖', name:'Бот для записи клиентов', cat:'bots', result:'200+ автоответов/день', grad:'linear-gradient(135deg,#1a1a3e,#2d2d6e)',
-    desc:'Telegram-бот для салона красоты. Запись, отмена, напоминания, рассылки.' },
+  { id:'p1', emoji:'🌐', name:'Лендинг Цифровой Мастер', cat:'sites', result:'Реальный проект', grad:'linear-gradient(135deg,#1a1200,#3a2800)', img:'case-site.jpg',
+    desc:'Личный сайт цифрового специалиста. Тёмный дизайн, оранжевый акцент, форма заявки с отправкой в Telegram.' },
+  { id:'p2', emoji:'📱', name:'Telegram Mini App', cat:'bots', result:'Реальный проект', grad:'linear-gradient(135deg,#0a1a2a,#1a3a4a)', img:'case-tma.jpg',
+    desc:'Mini App для цифрового специалиста: каталог услуг, портфолио, умная форма заявки в 3 шага.' },
   { id:'p3', emoji:'🎓', name:'Кабинет онлайн-школы', cat:'sites', result:'MVP за 18 дней', grad:'linear-gradient(135deg,#3a1a1a,#6e2d2d)',
     desc:'Платформа для онлайн-курсов с личным кабинетом, оплатой и прогрессом.' },
   { id:'p4', emoji:'🚚', name:'Сайт логистики', cat:'sites', result:'+60% входящих заявок', grad:'linear-gradient(135deg,#1a3a1a,#2d6e2d)',
@@ -869,8 +869,10 @@ function renderPortfolio(filter = 'all') {
   const filtered = filter === 'all' ? PORTFOLIO : PORTFOLIO.filter(p => p.cat === filter);
   grid.innerHTML = filtered.map(p => `
     <div class="portfolio-card" onclick="showWork('${p.id}')">
-      <div class="portfolio-preview" style="background:${p.grad};">
-        <span style="font-size:48px;">${p.emoji}</span>
+      <div class="portfolio-preview" style="background:${p.grad}; position:relative; overflow:hidden;">
+        ${p.img
+          ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="${p.name}">`
+          : `<span style="font-size:48px;">${p.emoji}</span>`}
         <span class="portfolio-tag">${p.cat === 'sites' ? 'Сайт' : p.cat === 'bots' ? 'Бот' : p.cat === 'ai' ? 'ИИ' : 'Авт.'}</span>
       </div>
       <div class="portfolio-body">
