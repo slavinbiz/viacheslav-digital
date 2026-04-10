@@ -573,15 +573,49 @@ const mock = {
   sendData: (d)=>{ console.log('sendData:',d); }
 };
 
-let tg;
+let _rawTg;
 try {
-  tg = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData !== undefined)
+  _rawTg = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData !== undefined)
     ? window.Telegram.WebApp : mock;
-} catch(e) { tg = mock; }
+} catch(e) { _rawTg = mock; }
 
-try { tg.expand(); } catch(e) {}
-try { tg.enableClosingConfirmation(); } catch(e) {}
-try { tg.ready(); } catch(e) {}
+// Безопасная обёртка — все вызовы в try/catch
+const tg = {
+  expand: ()=>{ try{_rawTg.expand()}catch(e){} },
+  ready:  ()=>{ try{_rawTg.ready()}catch(e){} },
+  enableClosingConfirmation: ()=>{ try{_rawTg.enableClosingConfirmation()}catch(e){} },
+  sendData: (d)=>{ try{_rawTg.sendData(d)}catch(e){} },
+  openTelegramLink: (url)=>{ try{_rawTg.openTelegramLink(url)}catch(e){ window.open(url,'_blank'); } },
+  showPopup: (p,cb)=>{ try{_rawTg.showPopup(p,cb)}catch(e){ alert(p.title+'\n\n'+p.message); if(cb)cb('ok'); } },
+  get initDataUnsafe(){ try{return _rawTg.initDataUnsafe||mock.initDataUnsafe}catch(e){return mock.initDataUnsafe;} },
+  HapticFeedback: {
+    notificationOccurred: (t)=>{ try{_rawTg.HapticFeedback.notificationOccurred(t)}catch(e){} },
+    impactOccurred: (t)=>{ try{_rawTg.HapticFeedback.impactOccurred(t)}catch(e){} }
+  },
+  MainButton: {
+    setText:  (t)=>{ try{_rawTg.MainButton.setText(t)}catch(e){} },
+    show:     ()=>{ try{_rawTg.MainButton.show()}catch(e){} },
+    hide:     ()=>{ try{_rawTg.MainButton.hide()}catch(e){} },
+    enable:   ()=>{ try{_rawTg.MainButton.enable()}catch(e){} },
+    disable:  ()=>{ try{_rawTg.MainButton.disable()}catch(e){} },
+    onClick:  (fn)=>{ try{_rawTg.MainButton.onClick(fn)}catch(e){} },
+    offClick: (fn)=>{ try{_rawTg.MainButton.offClick(fn)}catch(e){} }
+  },
+  BackButton: {
+    show:     ()=>{ try{_rawTg.BackButton.show()}catch(e){} },
+    hide:     ()=>{ try{_rawTg.BackButton.hide()}catch(e){} },
+    onClick:  (fn)=>{ try{_rawTg.BackButton.onClick(fn)}catch(e){} },
+    offClick: (fn)=>{ try{_rawTg.BackButton.offClick(fn)}catch(e){} }
+  },
+  CloudStorage: {
+    setItem: (k,v,cb)=>{ try{_rawTg.CloudStorage.setItem(k,v,cb)}catch(e){ try{localStorage.setItem(k,v)}catch(e2){}; if(cb)cb(); } },
+    getItem: (k,cb)=>{ try{_rawTg.CloudStorage.getItem(k,cb)}catch(e){ let v=null; try{v=localStorage.getItem(k)}catch(e2){}; cb(null,v); } }
+  }
+};
+
+tg.expand();
+tg.enableClosingConfirmation();
+tg.ready();
 
 // ══════════════════════════════════════════════
 // DATA
