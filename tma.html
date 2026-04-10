@@ -1100,7 +1100,6 @@ function submitBrief() {
   sendToTelegram(text);
 
   // Show success screen
-  const timeLabels = { morning:'Утром (9–12)', day:'Днём (12–18)', evening:'Вечером (18–21)' };
   const svcLabels = { site:'Сайт / лендинг', bot:'Telegram-бот', ai:'ИИ-агент', other:'Другое' };
   document.getElementById('success-details').innerHTML = `
     <div style="display:flex;flex-direction:column;gap:10px;">
