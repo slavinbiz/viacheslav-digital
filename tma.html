@@ -561,21 +561,27 @@
 // ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
-const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : {
+const mock = {
   expand: ()=>{}, ready: ()=>{}, enableClosingConfirmation: ()=>{},
   MainButton: { setText:()=>{}, show:()=>{}, hide:()=>{}, onClick:()=>{}, offClick:()=>{}, enable:()=>{}, disable:()=>{}, isVisible:false },
   BackButton: { show:()=>{}, hide:()=>{}, onClick:()=>{}, offClick:()=>{} },
   HapticFeedback: { notificationOccurred:()=>{}, impactOccurred:()=>{} },
-  CloudStorage: { setItem:()=>{}, getItem:(k,cb)=>cb(null,null) },
-  showPopup: (p,cb)=>{ alert(p.message); if(cb) cb('ok'); },
+  CloudStorage: { setItem:(k,v,cb)=>{ try{localStorage.setItem(k,v)}catch(e){}; if(cb)cb(); }, getItem:(k,cb)=>{ let v=null; try{v=localStorage.getItem(k)}catch(e){}; cb(null,v); } },
+  showPopup: (p,cb)=>{ alert(p.title+'\n\n'+p.message); if(cb) cb('ok'); },
   openTelegramLink: (url)=>{ window.open(url,'_blank'); },
   initDataUnsafe: { user: { first_name:'Пользователь', username:'username' } },
   sendData: (d)=>{ console.log('sendData:',d); }
 };
 
-tg.expand();
-tg.enableClosingConfirmation();
-tg.ready();
+let tg;
+try {
+  tg = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData !== undefined)
+    ? window.Telegram.WebApp : mock;
+} catch(e) { tg = mock; }
+
+try { tg.expand(); } catch(e) {}
+try { tg.enableClosingConfirmation(); } catch(e) {}
+try { tg.ready(); } catch(e) {}
 
 // ══════════════════════════════════════════════
 // DATA
