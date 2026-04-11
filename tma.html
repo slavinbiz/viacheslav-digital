@@ -416,6 +416,7 @@
   <div class="screen" id="screen-brief">
     <div style="padding:14px 16px 0;flex-shrink:0;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <button onclick="briefGoBack()" style="background:none;border:none;color:var(--hint);font-size:15px;cursor:pointer;padding:4px 0;min-height:44px;display:flex;align-items:center;gap:4px;">← Назад</button>
         <span style="font-size:14px;color:var(--hint);" id="brief-step-label">Шаг 1 из 3</span>
       </div>
       <div class="progress-bar">
@@ -791,6 +792,11 @@ tg.BackButton.onClick(() => {
     else { goBack(); }
   } else { goBack(); }
 });
+
+function briefGoBack() {
+  if (briefStep > 1) { briefStep--; renderBriefStep(); }
+  else { goBack(); }
+}
 
 // ══════════════════════════════════════════════
 // SERVICES
