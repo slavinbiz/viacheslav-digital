@@ -507,6 +507,53 @@
 
 <script>
 // ══════════════════════════════════════════════
+// ⚙️ SUPABASE
+// ══════════════════════════════════════════════
+const SUPABASE_URL = 'https://jxeuxbrvfwvdajcbackxq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ZGOhH-ByKhSHlmnjL5hiMA_qMjsAfHs';
+const MASTER_SLUG  = 'viacheslav';
+
+async function loadMasterConfig(slug) {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/masters?slug=eq.${encodeURIComponent(slug)}&select=*`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Accept': 'application/json' } }
+    );
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data.length) throw new Error('master not found');
+    return data[0];
+  } catch (err) {
+    console.warn('Supabase недоступен, используем локальный CONFIG:', err.message);
+    return null;
+  }
+}
+
+async function saveLead(data) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        master_id:    CONFIG._masterId,
+        service_type: data.serviceType,
+        task:         data.task,
+        name:         data.name,
+        username:     data.username,
+        time_pref:    data.time,
+        status:       'new'
+      })
+    });
+  } catch (err) {
+    console.warn('Не удалось сохранить заявку в Supabase:', err.message);
+  }
+}
+
+// ══════════════════════════════════════════════
 // ⚙️ CONFIG — всё что нужно менять под мастера
 // ══════════════════════════════════════════════
 const CONFIG = {
@@ -1135,6 +1182,7 @@ function submitBrief() {
     `🕐 <b>Время:</b> ${timeLabels[payload.time] || payload.time}`;
 
   sendToTelegram(text);
+  saveLead(payload);
 
   // Show success screen
   document.getElementById('success-details').innerHTML = `
@@ -1280,25 +1328,50 @@ document.getElementById('screen-onboard').addEventListener('click', e => {
 // ══════════════════════════════════════════════
 // STARTUP
 // ══════════════════════════════════════════════
-initUI();
-renderServices('all');
-renderPortfolio('all');
-
-// Check onboarding flag
-tg.CloudStorage.getItem('onboard_done', (err, val) => {
-  if (val === '1') {
-    showScreen('home');
-    updateNav('home');
-  } else {
-    // Show onboarding, set flag
-    tg.CloudStorage.setItem('onboard_done', '1', () => {});
-    showScreen('onboard');
-    tg.BackButton.hide();
-    tg.MainButton.setText('Начать →');
-    tg.MainButton.show();
-    tg.MainButton.onClick(() => nextSlide());
+(async () => {
+  // Загружаем данные мастера из Supabase (fallback — локальный CONFIG)
+  const remote = await loadMasterConfig(MASTER_SLUG);
+  if (remote) {
+    CONFIG._masterId = remote.id;
+    Object.assign(CONFIG.master, {
+      name:           remote.name,
+      specialization: remote.specialization,
+      photo:          remote.photo_url || CONFIG.master.photo,
+      bio:            remote.bio,
+      telegram:       remote.telegram,
+      phone:          remote.phone,
+      email:          remote.email,
+      stack:          remote.stack  || CONFIG.master.stack,
+      stats:          remote.stats  || CONFIG.master.stats,
+    });
+    if (remote.brand_accent) {
+      CONFIG.brand.accent  = remote.brand_accent;
+      CONFIG.brand.accentD = remote.brand_accent_d || remote.brand_accent;
+      document.documentElement.style.setProperty('--accent',   CONFIG.brand.accent);
+      document.documentElement.style.setProperty('--accent-d', CONFIG.brand.accentD);
+      document.documentElement.style.setProperty('--btn',      CONFIG.brand.accent);
+    }
   }
-});
+
+  initUI();
+  renderServices('all');
+  renderPortfolio('all');
+
+  // Check onboarding flag
+  tg.CloudStorage.getItem('onboard_done', (err, val) => {
+    if (val === '1') {
+      showScreen('home');
+      updateNav('home');
+    } else {
+      tg.CloudStorage.setItem('onboard_done', '1', () => {});
+      showScreen('onboard');
+      tg.BackButton.hide();
+      tg.MainButton.setText('Начать →');
+      tg.MainButton.show();
+      tg.MainButton.onClick(() => nextSlide());
+    }
+  });
+})();
 </script>
 </body>
 </html>
