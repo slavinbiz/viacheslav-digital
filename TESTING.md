@@ -130,7 +130,7 @@ Vercel подхватывает изменения за ~30 секунд.
 ### О специалисте (экран 7)
 - [ ] Фото (`/photo.jpg`), имя, специализация
 - [ ] Стек: HTML/CSS, JavaScript, Python, Telegram Bot API, OpenAI API, LangChain, Make, n8n, Tilda, Figma
-- [ ] Telegram @Viacheslav_Demin → открывает `https://t.me/Viacheslav_Demin`
+- [ ] Telegram @produser_viacheslav → открывает `https://t.me/produser_viacheslav`
 - [ ] Телефон +7 (906) 425-20-45 → копируется в буфер
 - [ ] Email slavin68@mail.ru → копируется в буфер
 - [ ] Tab Bar активен на «👤 О себе»
