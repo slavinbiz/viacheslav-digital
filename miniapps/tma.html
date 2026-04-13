@@ -303,8 +303,8 @@
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
         <div style="display:flex;align-items:center;gap:10px;">
-          <div class="logo-badge">ЦМ</div>
-          <span style="font-size:15px;font-weight:600;">Вячеслав Демин</span>
+          <div class="logo-badge" id="cfg-logo"></div>
+          <span style="font-size:15px;font-weight:600;" id="cfg-name-header"></span>
         </div>
         <div style="display:flex;align-items:center;gap:6px;background:rgba(74,222,128,0.12);border-radius:20px;padding:6px 12px;">
           <div class="pulse-dot"></div>
@@ -315,29 +315,14 @@
       <!-- Profile -->
       <div style="display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:24px;">
         <div class="avatar-ring" style="margin-bottom:14px;">
-          <div class="avatar-inner"><img src="/photo.jpg" alt="Вячеслав Демин"></div>
+          <div class="avatar-inner"><img id="cfg-photo-home" src="" alt=""></div>
         </div>
-        <div style="font-size:22px;font-weight:700;margin-bottom:4px;">Вячеслав Демин</div>
-        <div style="font-size:14px;color:var(--hint);">Сайты · Боты · ИИ-агенты</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:4px;" id="cfg-name-home"></div>
+        <div style="font-size:14px;color:var(--hint);" id="cfg-spec-home"></div>
       </div>
 
       <!-- Stats -->
-      <div class="card" style="display:flex;margin-bottom:20px;">
-        <div class="stat-box">
-          <div class="stat-val">14+</div>
-          <div class="stat-lbl">Проектов</div>
-        </div>
-        <div style="width:1px;background:rgba(255,255,255,0.08);"></div>
-        <div class="stat-box">
-          <div class="stat-val">3</div>
-          <div class="stat-lbl">Года опыта</div>
-        </div>
-        <div style="width:1px;background:rgba(255,255,255,0.08);"></div>
-        <div class="stat-box">
-          <div class="stat-val">2ч</div>
-          <div class="stat-lbl">Ответ</div>
-        </div>
-      </div>
+      <div class="card" style="display:flex;margin-bottom:20px;" id="cfg-stats"></div>
 
       <!-- Services pills -->
       <div class="section-title">Услуги</div>
@@ -441,7 +426,7 @@
         </svg>
       </div>
       <div style="font-size:24px;font-weight:700;margin-bottom:8px;text-align:center;">Заявка отправлена!</div>
-      <div style="font-size:15px;color:var(--hint);text-align:center;margin-bottom:28px;">Вячеслав ответит в течение 2 часов</div>
+      <div style="font-size:15px;color:var(--hint);text-align:center;margin-bottom:28px;" id="cfg-success-sub">Ответит в течение 2 часов</div>
       <div class="card" style="width:100%;margin-bottom:24px;" id="success-details">
         <!-- filled by JS -->
       </div>
@@ -479,59 +464,21 @@
     <div style="flex:1;overflow-y:auto;" class="screen-padded">
       <div style="display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:24px;padding-top:8px;">
         <div class="avatar-ring lg" style="margin-bottom:14px;">
-          <div class="avatar-inner"><img src="/photo.jpg" alt="Вячеслав Демин"></div>
+          <div class="avatar-inner"><img id="cfg-photo-about" src="" alt=""></div>
         </div>
-        <div style="font-size:22px;font-weight:700;margin-bottom:4px;">Вячеслав Демин</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:4px;" id="cfg-name-about"></div>
         <div style="font-size:14px;color:var(--hint);">Цифровой специалист</div>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <p style="font-size:14px;color:var(--hint);line-height:1.6;">
-          Помогаю бизнесу расти с помощью технологий. Создаю сайты, Telegram-боты и ИИ-агентов, которые решают реальные задачи. Работаю быстро — запуск за 7–14 дней. Всё под ключ: от идеи до готового продукта.
-        </p>
+        <p style="font-size:14px;color:var(--hint);line-height:1.6;" id="cfg-bio"></p>
       </div>
 
       <div class="section-title">Стек технологий</div>
-      <div class="stack-wrap" style="margin-bottom:24px;">
-        <span class="stack-pill">HTML/CSS</span>
-        <span class="stack-pill">JavaScript</span>
-        <span class="stack-pill">Python</span>
-        <span class="stack-pill">Telegram Bot API</span>
-        <span class="stack-pill">OpenAI API</span>
-        <span class="stack-pill">LangChain</span>
-        <span class="stack-pill">Make</span>
-        <span class="stack-pill">n8n</span>
-        <span class="stack-pill">Tilda</span>
-        <span class="stack-pill">Figma</span>
-      </div>
+      <div class="stack-wrap" style="margin-bottom:24px;" id="cfg-stack"></div>
 
       <div class="section-title">Контакты</div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <div class="contact-row" onclick="openTg()">
-          <span class="contact-icon">✈️</span>
-          <div class="contact-info">
-            <div class="contact-label">Telegram</div>
-            <div class="contact-val" style="color:var(--accent);">@produser_viacheslav</div>
-          </div>
-          <span style="color:var(--hint);font-size:16px;">→</span>
-        </div>
-        <div class="contact-row" onclick="copyText('+7 (906) 425-20-45','Телефон скопирован')">
-          <span class="contact-icon">📞</span>
-          <div class="contact-info">
-            <div class="contact-label">Телефон</div>
-            <div class="contact-val">+7 (906) 425-20-45</div>
-          </div>
-          <span style="color:var(--hint);font-size:14px;">⎘</span>
-        </div>
-        <div class="contact-row" onclick="copyText('slavin68@mail.ru','Email скопирован')">
-          <span class="contact-icon">📧</span>
-          <div class="contact-info">
-            <div class="contact-label">Email</div>
-            <div class="contact-val">slavin68@mail.ru</div>
-          </div>
-          <span style="color:var(--hint);font-size:14px;">⎘</span>
-        </div>
-      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;" id="cfg-contacts"></div>
     </div>
   </div>
 
@@ -559,6 +506,54 @@
 </div>
 
 <script>
+// ══════════════════════════════════════════════
+// ⚙️ CONFIG — всё что нужно менять под мастера
+// ══════════════════════════════════════════════
+const CONFIG = {
+
+  // Данные мастера
+  master: {
+    name:           'Вячеслав Демин',
+    specialization: 'Сайты · Боты · ИИ-агенты',
+    logo:           'ЦМ',
+    photo:          '/photo.jpg',
+    bio:            'Помогаю бизнесу расти с помощью технологий. Создаю сайты, Telegram-боты и ИИ-агентов, которые решают реальные задачи. Работаю быстро — запуск за 7–14 дней. Всё под ключ: от идеи до готового продукта.',
+    stats: [
+      { val: '14+', label: 'Проектов' },
+      { val: '3',   label: 'Года опыта' },
+      { val: '2ч',  label: 'Ответ' }
+    ],
+    telegram: 'produser_viacheslav',
+    phone:    '+7 (906) 425-20-45',
+    email:    'slavin68@mail.ru',
+    stack:    ['HTML/CSS','JavaScript','Python','Telegram Bot API','OpenAI API','LangChain','Make','n8n','Tilda','Figma'],
+  },
+
+  // Цвета бренда — меняй только здесь
+  brand: {
+    accent:  '#ff8c00',   // основной акцент
+    accentD: '#cc7000',   // тёмный акцент (hover, рамки)
+  },
+
+  // Онбординг — 2 слайда
+  onboarding: [
+    { emoji: '🚀', title: 'Привет! Я Вячеслав',       sub: 'Создаю сайты, ботов и ИИ-агентов для бизнеса' },
+    { emoji: '⚡', title: 'Запускаю за 7–14 дней',    sub: 'Без долгих переговоров — от идеи до результата' },
+  ],
+
+  // Бот — токен и chat_id владельца
+  bot: {
+    token:  '8731014535:AAG4Vadmvo1iXklOt1fpp8LUhZ6Ped79xN4',
+    chatId: '888224075',
+  },
+
+};
+
+// Применяем цвета из CONFIG
+document.documentElement.style.setProperty('--accent',   CONFIG.brand.accent);
+document.documentElement.style.setProperty('--accent-d', CONFIG.brand.accentD);
+document.documentElement.style.setProperty('--btn',      CONFIG.brand.accent);
+
 // ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
@@ -1102,8 +1097,8 @@ function briefNext() {
   }
 }
 
-const TG_TOKEN   = '8731014535:AAG4Vadmvo1iXklOt1fpp8LUhZ6Ped79xN4';
-const TG_CHAT_ID = '888224075';
+const TG_TOKEN   = CONFIG.bot.token;
+const TG_CHAT_ID = CONFIG.bot.chatId;
 
 async function sendToTelegram(text) {
   try {
@@ -1166,10 +1161,77 @@ function submitBrief() {
 }
 
 // ══════════════════════════════════════════════
+// INIT UI — заполняем страницу из CONFIG
+// ══════════════════════════════════════════════
+function initUI() {
+  const m = CONFIG.master;
+
+  // Заголовок
+  const logo = document.getElementById('cfg-logo');
+  if (logo) logo.textContent = m.logo;
+  const nameHeader = document.getElementById('cfg-name-header');
+  if (nameHeader) nameHeader.textContent = m.name;
+
+  // Главная — профиль
+  const photoHome = document.getElementById('cfg-photo-home');
+  if (photoHome) photoHome.src = m.photo;
+  const nameHome = document.getElementById('cfg-name-home');
+  if (nameHome) nameHome.textContent = m.name;
+  const specHome = document.getElementById('cfg-spec-home');
+  if (specHome) specHome.textContent = m.specialization;
+
+  // Главная — статистика
+  const statsEl = document.getElementById('cfg-stats');
+  if (statsEl) {
+    statsEl.innerHTML = m.stats.map((s, i) =>
+      (i > 0 ? '<div style="width:1px;background:rgba(255,255,255,0.1);"></div>' : '') +
+      `<div class="stat-box"><div class="stat-val">${s.val}</div><div class="stat-lbl">${s.label}</div></div>`
+    ).join('');
+  }
+
+  // О себе — фото и имя
+  const photoAbout = document.getElementById('cfg-photo-about');
+  if (photoAbout) photoAbout.src = m.photo;
+  const nameAbout = document.getElementById('cfg-name-about');
+  if (nameAbout) nameAbout.textContent = m.name;
+
+  // О себе — биография
+  const bio = document.getElementById('cfg-bio');
+  if (bio) bio.textContent = m.bio;
+
+  // О себе — стек
+  const stack = document.getElementById('cfg-stack');
+  if (stack) stack.innerHTML = m.stack.map(s => `<span class="stack-pill">${s}</span>`).join('');
+
+  // О себе — контакты
+  const contacts = document.getElementById('cfg-contacts');
+  if (contacts) {
+    contacts.innerHTML = [
+      { icon:'✈️', label:'Telegram', val:'@' + m.telegram, action:`tg.openTelegramLink('https://t.me/${m.telegram}')` },
+      { icon:'📞', label:'Телефон',  val: m.phone,          action:`copyText('${m.phone}','Телефон скопирован!')` },
+      { icon:'📧', label:'Email',    val: m.email,          action:`copyText('${m.email}','Email скопирован!')` },
+    ].map(c => `
+      <div class="contact-row" onclick="${c.action}">
+        <div class="contact-icon">${c.icon}</div>
+        <div class="contact-info">
+          <div class="contact-label">${c.label}</div>
+          <div class="contact-val">${c.val}</div>
+        </div>
+        <div style="color:var(--hint);font-size:18px;">→</div>
+      </div>
+    `).join('');
+  }
+
+  // Экран успеха — имя мастера
+  const successSub = document.getElementById('cfg-success-sub');
+  if (successSub) successSub.textContent = m.name + ' ответит в течение 2 часов';
+}
+
+// ══════════════════════════════════════════════
 // ABOUT
 // ══════════════════════════════════════════════
 function openTg() {
-  tg.openTelegramLink('https://t.me/produser_viacheslav');
+  tg.openTelegramLink('https://t.me/' + CONFIG.master.telegram);
 }
 
 function copyText(text, msg) {
@@ -1218,6 +1280,7 @@ document.getElementById('screen-onboard').addEventListener('click', e => {
 // ══════════════════════════════════════════════
 // STARTUP
 // ══════════════════════════════════════════════
+initUI();
 renderServices('all');
 renderPortfolio('all');
 
