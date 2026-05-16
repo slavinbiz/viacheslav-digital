@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Панель мастера</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  body { background: #0f0f0f; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .card { background: #1e1e1e; border-radius: 12px; }
+  .badge-new { background: #ff8c00; color: #fff; }
+  .badge-in_progress { background: #3b82f6; color: #fff; }
+  .badge-done { background: #22c55e; color: #fff; }
+  input, textarea, select { background: #1e1e1e; border: 1.5px solid #333; color: #fff; border-radius: 8px; padding: 10px 14px; width: 100%; outline: none; }
+  input:focus, textarea:focus, select:focus { border-color: #ff8c00; }
+  .btn { background: #ff8c00; color: #fff; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; border: none; transition: opacity 0.2s; }
+  .btn:hover { opacity: 0.85; }
+  .btn-ghost { background: #1e1e1e; color: #fff; border: 1.5px solid #333; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 13px; }
+  .btn-ghost:hover { border-color: #ff8c00; }
+  .tab { padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; color: #888; transition: all 0.2s; }
+  .tab.active { border-color: #ff8c00; color: #ff8c00; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+  <div class="card p-8 w-full max-w-sm">
+    <div style="width:48px;height:48px;background:#ff8c00;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;margin-bottom:24px;">ЦМ</div>
+    <h1 class="text-2xl font-bold mb-2">Панель мастера</h1>
+    <p class="text-sm mb-6" style="color:#888;">Войдите чтобы управлять заявками</p>
+    <div class="mb-4">
+      <label class="text-sm mb-1 block" style="color:#888;">Email</label>
+      <input type="email" id="login-email" placeholder="slavin68@mail.ru">
+    </div>
+    <div class="mb-6">
+      <label class="text-sm mb-1 block" style="color:#888;">Пароль</label>
+      <input type="password" id="login-password" placeholder="••••••••">
+    </div>
+    <div id="login-error" class="text-sm mb-4 hidden" style="color:#ef4444;"></div>
+    <button class="btn w-full" onclick="login()">Войти →</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden min-h-screen">
+
+  <!-- Header -->
+  <div style="background:#1e1e1e;border-bottom:1px solid #2a2a2a;" class="px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div style="width:36px;height:36px;background:#ff8c00;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;">ЦМ</div>
+      <div>
+        <div class="font-bold" id="dash-name">Вячеслав Демин</div>
+        <div class="text-xs" style="color:#888;">Панель управления</div>
+      </div>
+    </div>
+    <button class="btn-ghost" onclick="logout()">Выйти</button>
+  </div>
+
+  <!-- Tabs -->
+  <div style="background:#1e1e1e;border-bottom:1px solid #2a2a2a;" class="px-6 flex gap-0">
+    <div class="tab active" id="tab-leads" onclick="switchTab('leads')">📋 Заявки</div>
+    <div class="tab" id="tab-profile" onclick="switchTab('profile')">👤 Профиль</div>
+  </div>
+
+  <!-- LEADS TAB -->
+  <div id="tab-content-leads" class="p-6">
+
+    <!-- Stats -->
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="card p-4 text-center">
+        <div class="text-2xl font-bold" style="color:#ff8c00;" id="stat-new">0</div>
+        <div class="text-xs mt-1" style="color:#888;">Новых</div>
+      </div>
+      <div class="card p-4 text-center">
+        <div class="text-2xl font-bold" style="color:#3b82f6;" id="stat-progress">0</div>
+        <div class="text-xs mt-1" style="color:#888;">В работе</div>
+      </div>
+      <div class="card p-4 text-center">
+        <div class="text-2xl font-bold" style="color:#22c55e;" id="stat-done">0</div>
+        <div class="text-xs mt-1" style="color:#888;">Готово</div>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="flex gap-2 mb-4 flex-wrap">
+      <button class="btn-ghost" id="filter-all" onclick="filterLeads('all')" style="border-color:#ff8c00;color:#ff8c00;">Все</button>
+      <button class="btn-ghost" id="filter-new" onclick="filterLeads('new')">Новые</button>
+      <button class="btn-ghost" id="filter-in_progress" onclick="filterLeads('in_progress')">В работе</button>
+      <button class="btn-ghost" id="filter-done" onclick="filterLeads('done')">Готово</button>
+    </div>
+
+    <!-- Leads list -->
+    <div id="leads-list" class="flex flex-col gap-3">
+      <div class="text-sm" style="color:#888;">Загружаем заявки...</div>
+    </div>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div id="tab-content-profile" class="p-6 hidden">
+    <div class="max-w-lg">
+      <h2 class="text-lg font-bold mb-4">Профиль мастера</h2>
+      <div class="flex flex-col gap-4">
+        <div>
+          <label class="text-sm mb-1 block" style="color:#888;">Имя</label>
+          <input type="text" id="prof-name">
+        </div>
+        <div>
+          <label class="text-sm mb-1 block" style="color:#888;">Специализация</label>
+          <input type="text" id="prof-spec">
+        </div>
+        <div>
+          <label class="text-sm mb-1 block" style="color:#888;">Биография</label>
+          <textarea id="prof-bio" rows="4"></textarea>
+        </div>
+        <div>
+          <label class="text-sm mb-1 block" style="color:#888;">Telegram (@username)</label>
+          <input type="text" id="prof-telegram">
+        </div>
+        <div>
+          <label class="text-sm mb-1 block" style="color:#888;">Телефон</label>
+          <input type="text" id="prof-phone">
+        </div>
+        <div>
+          <label class="text-sm mb-1 block" style="color:#888;">Email</label>
+          <input type="text" id="prof-email">
+        </div>
+        <div>
+          <label class="text-sm mb-1 block" style="color:#888;">Цвет акцента</label>
+          <div class="flex gap-3 items-center">
+            <input type="color" id="prof-accent" style="width:60px;height:42px;padding:4px;cursor:pointer;">
+            <span class="text-sm" style="color:#888;">Цвет кнопок и выделений в Mini App</span>
+          </div>
+        </div>
+        <div id="prof-save-msg" class="text-sm hidden" style="color:#22c55e;">✓ Сохранено!</div>
+        <button class="btn" onclick="saveProfile()">Сохранить изменения</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL = 'https://jxeuxbrvfwvdajcbacxq.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZXV4YnJ2Znd2ZGFqY2JhY3hxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwOTg4MDgsImV4cCI6MjA5MTY3NDgwOH0.fCJZLDv-lYAipghEi875f9s6_brSzMKaXsl1MKVUeVU';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentMaster = null;
+let allLeads = [];
+let currentFilter = 'all';
+
+const svcLabels  = { site:'Сайт / лендинг', bot:'Telegram-бот', ai:'ИИ-агент', other:'Другое' };
+const timeLabels = { morning:'Утром (9–12)', day:'Днём (12–18)', evening:'Вечером (18–21)' };
+const statusLabels = { new:'Новая', in_progress:'В работе', done:'Готово' };
+
+// ── AUTH ──────────────────────────────────────
+async function login() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-password').value;
+  const err   = document.getElementById('login-error');
+  err.classList.add('hidden');
+
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) {
+    err.textContent = 'Неверный email или пароль';
+    err.classList.remove('hidden');
+    return;
+  }
+  await initDashboard();
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+}
+
+// ── INIT ──────────────────────────────────────
+async function initDashboard() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  // Загружаем профиль мастера
+  const { data: masters } = await sb.from('masters').select('*').eq('owner_id', user.id);
+  if (!masters || !masters.length) {
+    alert('Профиль мастера не найден');
+    return;
+  }
+  currentMaster = masters[0];
+
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  document.getElementById('dash-name').textContent = currentMaster.name;
+
+  fillProfile();
+  await loadLeads();
+}
+
+// ── LEADS ─────────────────────────────────────
+async function loadLeads() {
+  const { data } = await sb.from('leads')
+    .select('*')
+    .eq('master_id', currentMaster.id)
+    .order('created_at', { ascending: false });
+
+  allLeads = data || [];
+  updateStats();
+  renderLeads();
+}
+
+function updateStats() {
+  document.getElementById('stat-new').textContent      = allLeads.filter(l => l.status === 'new').length;
+  document.getElementById('stat-progress').textContent = allLeads.filter(l => l.status === 'in_progress').length;
+  document.getElementById('stat-done').textContent     = allLeads.filter(l => l.status === 'done').length;
+}
+
+function filterLeads(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('[id^="filter-"]').forEach(b => {
+    b.style.borderColor = '#333'; b.style.color = '#fff';
+  });
+  const active = document.getElementById('filter-' + filter);
+  if (active) { active.style.borderColor = '#ff8c00'; active.style.color = '#ff8c00'; }
+  renderLeads();
+}
+
+function renderLeads() {
+  const list = document.getElementById('leads-list');
+  const filtered = currentFilter === 'all' ? allLeads : allLeads.filter(l => l.status === currentFilter);
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="text-sm" style="color:#888;">Заявок нет</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(l => `
+    <div class="card p-4">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <div class="font-semibold">${l.name || '—'}</div>
+          <div class="text-sm mt-1" style="color:#888;">
+            ${svcLabels[l.service_type] || l.service_type || '—'} · ${timeLabels[l.time_pref] || l.time_pref || '—'}
+          </div>
+          ${l.username ? `<div class="text-sm mt-1" style="color:#ff8c00;">@${l.username}</div>` : ''}
+        </div>
+        <span class="badge-${l.status} text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap">
+          ${statusLabels[l.status] || l.status}
+        </span>
+      </div>
+      ${l.task ? `<div class="text-sm mb-3 p-3 rounded-lg" style="background:#2a2a2a;color:#ccc;line-height:1.5;">${l.task}</div>` : ''}
+      <div class="flex gap-2 flex-wrap items-center justify-between">
+        <div class="text-xs" style="color:#555;">${new Date(l.created_at).toLocaleString('ru')}</div>
+        <select onchange="updateStatus('${l.id}', this.value)" style="width:auto;padding:6px 10px;font-size:13px;">
+          <option value="new"        ${l.status==='new'?'selected':''}>Новая</option>
+          <option value="in_progress"${l.status==='in_progress'?'selected':''}>В работе</option>
+          <option value="done"       ${l.status==='done'?'selected':''}>Готово</option>
+        </select>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function updateStatus(id, status) {
+  await sb.from('leads').update({ status }).eq('id', id);
+  const lead = allLeads.find(l => l.id === id);
+  if (lead) lead.status = status;
+  updateStats();
+  renderLeads();
+}
+
+// ── PROFILE ───────────────────────────────────
+function fillProfile() {
+  const m = currentMaster;
+  document.getElementById('prof-name').value     = m.name || '';
+  document.getElementById('prof-spec').value     = m.specialization || '';
+  document.getElementById('prof-bio').value      = m.bio || '';
+  document.getElementById('prof-telegram').value = m.telegram || '';
+  document.getElementById('prof-phone').value    = m.phone || '';
+  document.getElementById('prof-email').value    = m.email || '';
+  document.getElementById('prof-accent').value   = m.brand_accent || '#ff8c00';
+}
+
+async function saveProfile() {
+  const updates = {
+    name:           document.getElementById('prof-name').value,
+    specialization: document.getElementById('prof-spec').value,
+    bio:            document.getElementById('prof-bio').value,
+    telegram:       document.getElementById('prof-telegram').value,
+    phone:          document.getElementById('prof-phone').value,
+    email:          document.getElementById('prof-email').value,
+    brand_accent:   document.getElementById('prof-accent').value,
+  };
+  await sb.from('masters').update(updates).eq('id', currentMaster.id);
+  Object.assign(currentMaster, updates);
+
+  const msg = document.getElementById('prof-save-msg');
+  msg.classList.remove('hidden');
+  setTimeout(() => msg.classList.add('hidden'), 3000);
+}
+
+// ── TABS ──────────────────────────────────────
+function switchTab(tab) {
+  ['leads','profile'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    document.getElementById('tab-content-' + t).classList.toggle('hidden', t !== tab);
+  });
+  if (tab === 'leads') loadLeads();
+}
+
+// ── STARTUP ───────────────────────────────────
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    await initDashboard();
+  }
+})();
+</script>
+</body>
+</html>
