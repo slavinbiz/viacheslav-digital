@@ -1158,44 +1158,38 @@ function briefNext() {
   }
 }
 
-const TG_TOKEN   = CONFIG.bot.token;
-const TG_CHAT_ID = CONFIG.bot.chatId;
-
-async function sendToTelegram(text) {
+async function notifyMaster(payload) {
   try {
-    const res = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+    await fetch('/api/notify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: TG_CHAT_ID, text, parse_mode: 'HTML' }),
+      body: JSON.stringify({
+        master_id:    CONFIG._masterId,
+        service_type: payload.service,
+        task:         payload.task,
+        name:         payload.name,
+        username:     payload.username,
+        time_pref:    payload.time
+      })
     });
-    if (!res.ok) throw new Error('API');
-  } catch {
-    try {
-      await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(text)}`, { mode: 'no-cors' });
-    } catch { /* тихий фолбэк */ }
+  } catch (err) {
+    console.warn('Уведомление не отправлено:', err.message);
   }
 }
 
 function submitBrief() {
   const payload = {
-    service: briefData.serviceType || briefData.service || 'other',
-    task: briefData.task,
-    name: briefData.name,
-    username: '@' + briefData.username,
-    time: briefData.time
+    service:  briefData.serviceType || briefData.service || 'other',
+    task:     briefData.task,
+    name:     briefData.name,
+    username: briefData.username,
+    time:     briefData.time
   };
 
   const timeLabels = { morning:'Утром (9–12)', day:'Днём (12–18)', evening:'Вечером (18–21)' };
   const svcLabels  = { site:'Сайт / лендинг', bot:'Telegram-бот', ai:'ИИ-агент', other:'Другое' };
 
-  const text = `📱 <b>Новая заявка из Mini App</b>\n\n` +
-    `🛠 <b>Услуга:</b> ${svcLabels[payload.service] || payload.service}\n` +
-    `💬 <b>Задача:</b> ${payload.task}\n` +
-    `👤 <b>Имя:</b> ${payload.name}\n` +
-    `✈️ <b>Telegram:</b> ${payload.username}\n` +
-    `🕐 <b>Время:</b> ${timeLabels[payload.time] || payload.time}`;
-
-  sendToTelegram(text);
+  notifyMaster(payload);
   saveLead(payload);
 
   // Show success screen
