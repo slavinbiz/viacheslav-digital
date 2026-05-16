@@ -244,7 +244,7 @@ function renderLeads() {
           <div class="text-sm mt-1" style="color:#888;">
             ${svcLabels[l.service_type] || l.service_type || '—'} · ${timeLabels[l.time_pref] || l.time_pref || '—'}
           </div>
-          ${l.username ? `<div class="text-sm mt-1" style="color:#ff8c00;">@${l.username}</div>` : ''}
+          ${l.username ? `<div class="text-sm mt-1" style="color:#ff8c00;">${l.username.startsWith('@') ? l.username : '@' + l.username}</div>` : ''}
         </div>
         <span class="badge-${l.status} text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap">
           ${statusLabels[l.status] || l.status}
