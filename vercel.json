@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/tma", "destination": "https://viacheslav-tma.vercel.app/tma" },
-    { "source": "/dashboard", "destination": "https://viacheslav-tma.vercel.app/dashboard" }
+    { "source": "/dashboard", "destination": "https://viacheslav-tma.vercel.app/dashboard" },
+    { "source": "/photo.jpg", "destination": "https://viacheslav-tma.vercel.app/photo.jpg" }
   ]
 }
