@@ -1695,12 +1695,9 @@
   });
 
   // ── FORM SUBMISSION ────────────────────────────────────
-  const TG_TOKEN   = '8731014535:AAG4Vadmvo1iXklOt1fpp8LUhZ6Ped79xN4';
-  const TG_CHAT_ID = '888224075';
-
-  const contactForm    = document.getElementById('contact-form');
-  const formSuccessEl  = document.getElementById('form-success');
-  const formResetBtn   = document.getElementById('form-reset');
+  const contactForm   = document.getElementById('contact-form');
+  const formSuccessEl = document.getElementById('form-success');
+  const formResetBtn  = document.getElementById('form-reset');
 
   function showSuccess() {
     contactForm.style.display = 'none';
@@ -1733,20 +1730,13 @@
     statusEl.className = 'form-status';
     statusEl.textContent = '';
 
-    const text = `🆕 Новая заявка с сайта\n\n👤 Имя: ${name}\n📧 Email: ${email}\n💬 Задача: ${message}`;
-
     try {
-      const res = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+      await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: TG_CHAT_ID, text }),
+        body: JSON.stringify({ name, email, message }),
       });
-      if (!res.ok) throw new Error('API');
-    } catch {
-      try {
-        await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(text)}`, { mode: 'no-cors' });
-      } catch { /* silent — always show success to user */ }
-    } finally {
+    } catch { /* silent */ } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Отправить заявку →';
     }
