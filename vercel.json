@@ -1,5 +1,6 @@
 {
-  "routes": [
-    { "src": "/", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/tma", "destination": "https://viacheslav-tma.vercel.app/tma" },
+    { "source": "/dashboard", "destination": "https://viacheslav-tma.vercel.app/dashboard" }
   ]
 }
