@@ -1,7 +1,5 @@
 {
   "routes": [
-    { "src": "/tma", "dest": "/miniapps/tma.html" },
-    { "src": "/dashboard", "dest": "/dashboard.html" },
     { "src": "/", "dest": "/index.html" }
   ]
 }
